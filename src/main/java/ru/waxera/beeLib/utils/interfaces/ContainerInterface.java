@@ -22,7 +22,6 @@ public class ContainerInterface {
     public ContainerInterface(Player holder, String title, int size){
         this.title = StringUtils.format(title);
         this.inventory = Bukkit.createInventory(holder, size, this.title);
-        InterfaceTemplatesList.add(this);
     }
 
     public void setBackground(ArrayList<Integer> bg_slots_, Material background_){
@@ -46,9 +45,18 @@ public class ContainerInterface {
         }
     }
 
-//    protected void saveTemplate(){
-//        TemplatesList.add(this);
-//    }
+    public void saveTemplate(){
+        InterfaceTemplatesList.add(this);
+    }
+
+    public ContainerInterface cloneTemplate() {
+        try{
+            return (ContainerInterface) this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public void playerClickAction(InventoryClickEvent e) {}
 
