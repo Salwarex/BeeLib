@@ -9,9 +9,9 @@ import ru.waxera.beeLib.utils.interfaces.InterfaceHandler;
 
 import java.util.HashMap;
 
-public final class BeeLib{
+public final class BeeLib extends JavaPlugin{
     private static JavaPlugin plugin;
-    private static HashMap<Language, Storage> lang;
+    private static HashMap<Language, Storage> lang = new HashMap<>();
     private static HashMap<String, Boolean> softDeps = new HashMap<>();
 
     public static JavaPlugin getPlugin(){
