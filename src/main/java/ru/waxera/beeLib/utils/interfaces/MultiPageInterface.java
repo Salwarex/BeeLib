@@ -41,7 +41,7 @@ public class MultiPageInterface extends ContainerInterface{
         }), true);
     }
 
-    public void setItem(Integer index, ItemStack itemStack, SlotAction action, boolean multipage){
+    public void setItem(Integer index, ItemStack itemStack, Action action, boolean multipage){
         if(content.containsKey(index)) { Message.error("Couldn't add an item to slot " + index + "! There is another item in it."); return; }
         Slot slot = new Slot(itemStack, action);
         if(!multipage) content.put(index, slot);
@@ -51,7 +51,7 @@ public class MultiPageInterface extends ContainerInterface{
         }
     }
 
-    public void addItem(ItemStack itemStack, SlotAction action){
+    public void addItem(ItemStack itemStack, Action action){
         Integer index = -1;
         while (this.content.containsKey(index)
                 || this.bg_slots.contains(index)

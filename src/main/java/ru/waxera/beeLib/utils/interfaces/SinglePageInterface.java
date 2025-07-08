@@ -15,7 +15,7 @@ public class SinglePageInterface extends ContainerInterface{
         this.items_moving = items_moving;
     }
 
-    public void setItem(Integer index, ItemStack itemStack, SlotAction action){
+    public void setItem(Integer index, ItemStack itemStack, Action action){
         if(items.containsKey(index)) { Message.error("Couldn't add an item to slot " + index + "! There is another item in it."); return; }
         if(this.bg_slots.contains(index)) { Message.error("Couldn't add an item to slot " + index + "! There is background item in it."); return; }
         if(index >= this.inventory.getSize()){ Message.error("The specified item index exceeds the interface size (" + index + " >= " + this.inventory.getSize() + ")"); return;}
@@ -24,7 +24,7 @@ public class SinglePageInterface extends ContainerInterface{
         initSlots();
     }
 
-    public void addItem(ItemStack itemStack, SlotAction action){
+    public void addItem(ItemStack itemStack, Action action){
         Integer index = -1;
         for(int i = 0; i < this.inventory.getSize(); i++){
             if(this.inventory.getItem(i) == null){

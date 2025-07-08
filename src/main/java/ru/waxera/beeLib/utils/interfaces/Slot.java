@@ -5,9 +5,9 @@ import org.bukkit.inventory.ItemStack;
 
 public class Slot {
     private ItemStack itemStack;
-    private SlotAction action;
+    private Action action;
 
-    public Slot(ItemStack is, SlotAction ac){
+    public Slot(ItemStack is, Action ac){
         this.itemStack = is;
         this.action = ac;
     }
@@ -20,9 +20,4 @@ public class Slot {
     public ItemStack getItemStack(){
         return this.itemStack;
     }
-}
-
-@FunctionalInterface
-interface SlotAction{
-    void run(Player player);
 }
