@@ -17,6 +17,7 @@ public class ContainerInterface {
     protected Material background = null;
     protected String title;
     protected boolean items_moving = false;
+    private boolean DEFAULT_INTERFACE_HANDLER = true;
 
     public ContainerInterface(Player holder, String title, int size){
         this.title = StringUtils.format(title);
@@ -29,6 +30,9 @@ public class ContainerInterface {
         this.background = background_;
         initBackground();
     }
+
+    public void customInterfaceHandlerFlag(){ DEFAULT_INTERFACE_HANDLER = false; }
+    public boolean isDefaultInterfaceHandler(){ return DEFAULT_INTERFACE_HANDLER; }
 
     private void initBackground(){
         ItemStackBuilder cis = new ItemStackBuilder(background, 1);

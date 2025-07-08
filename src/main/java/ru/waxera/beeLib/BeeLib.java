@@ -5,7 +5,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.waxera.beeLib.utils.Language;
 import ru.waxera.beeLib.utils.Storage;
-import ru.waxera.beeLib.utils.database.Database;
+import ru.waxera.beeLib.utils.interfaces.InterfaceHandler;
 
 import java.util.HashMap;
 
@@ -21,6 +21,7 @@ public final class BeeLib{
     public static void setPlugin(final JavaPlugin plugin){
         BeeLib.plugin = plugin;
         checkDependecies();
+        Bukkit.getPluginManager().registerEvents(new InterfaceHandler(), BeeLib.plugin);
     }
 
     public static void initLanguages(Language[] languages){
