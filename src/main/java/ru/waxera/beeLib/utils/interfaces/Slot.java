@@ -1,0 +1,28 @@
+package ru.waxera.beeLib.utils.interfaces;
+
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+public class Slot {
+    private ItemStack itemStack;
+    private SlotAction action;
+
+    public Slot(ItemStack is, SlotAction ac){
+        this.itemStack = is;
+        this.action = ac;
+    }
+
+    public void execute(Player player){
+        if (action == null) return;
+        action.run(player);
+    }
+
+    public ItemStack getItemStack(){
+        return this.itemStack;
+    }
+}
+
+@FunctionalInterface
+interface SlotAction{
+    void run(Player player);
+}

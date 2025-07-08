@@ -1,0 +1,7 @@
+name: BeeLib
+version: '1.0'
+api-version: '1.21'
+prefix: BeeLib
+authors: [ Salwarex ]
+description: An library that includes a number of elements common to most of my own projects, created to avoid repeating the same actions in each of the plugins. It was created exclusively for my own work, but if it helps someone, I will be glad :)
+website: waxera.ru
