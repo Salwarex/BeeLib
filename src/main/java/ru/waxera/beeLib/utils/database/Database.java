@@ -29,7 +29,7 @@ public class Database {
             }
             default -> {
                 this.url = null;
-                Message.error("The specified database type could not be found!");
+                Message.error(null, "The specified database type could not be found!");
                 return;
             }
         }

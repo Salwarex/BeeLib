@@ -2,6 +2,7 @@ package ru.waxera.beeLib.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.BeeLib;
 
 import java.io.File;
@@ -10,19 +11,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class Storage {
+    private final Plugin plugin;
     private File file;
     private FileConfiguration config;
 
-    public Storage(String name, String dir){
+    public Storage(String name, String dir, Plugin plugin){
+        this.plugin = plugin == null ? BeeLib.getInstance() : plugin;
         if(dir != null && !dir.isEmpty()){ //subfolder files
-            File folder = new File(BeeLib.getPlugin().getDataFolder(), dir);
+            File folder = new File(this.plugin.getDataFolder(), dir);
             if(!folder.exists()){
                 folder.mkdirs();
             }
             file = new File(folder, name);
         }
         else{
-            file = new File(BeeLib.getPlugin().getDataFolder(), name);
+            file = new File(this.plugin.getDataFolder(), name);
         }
 
         try{
@@ -47,10 +50,10 @@ public class Storage {
         }
     }
 
-    public static void checkUpdates(String fileName, String subFolder) {
+    public void checkUpdates(String fileName, String subFolder) {
         File configFile = (subFolder != null && !subFolder.isEmpty())
-                ? new File(BeeLib.getPlugin().getDataFolder(), subFolder + File.separator + fileName)
-                : new File(BeeLib.getPlugin().getDataFolder(), fileName);
+                ? new File(this.plugin.getDataFolder(), subFolder + File.separator + fileName)
+                : new File(this.plugin.getDataFolder(), fileName);
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
@@ -58,10 +61,10 @@ public class Storage {
                 ? subFolder + "/" + fileName
                 : fileName;
 
-        InputStream resourceStream = BeeLib.getPlugin().getResource(resourcePath);
+        InputStream resourceStream = this.plugin.getResource(resourcePath);
 
         if (resourceStream == null) {
-            BeeLib.getPlugin().getLogger().severe("Resource not found: " + resourcePath);
+            this.plugin.getLogger().severe("Resource not found: " + resourcePath);
             return;
         }
 
@@ -79,9 +82,9 @@ public class Storage {
             config.set("version", resourceConfig.getInt("version"));
             try {
                 config.save(configFile);
-                BeeLib.getPlugin().getLogger().info("Updated " + fileName + " to version " + resourceVersion);
+                this.plugin.getLogger().info("Updated " + fileName + " to version " + resourceVersion);
             } catch (IOException e) {
-                BeeLib.getPlugin().getLogger().severe("Failed to save updated config: " + e.getMessage());
+                this.plugin.getLogger().severe("Failed to save updated config: " + e.getMessage());
             }
         }
     }

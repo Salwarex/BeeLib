@@ -20,7 +20,7 @@ public class ContainerInterface {
     private boolean DEFAULT_INTERFACE_HANDLER = true;
 
     public ContainerInterface(Player holder, String title, int size){
-        this.title = StringUtils.format(title);
+        this.title = StringUtils.format(title, null);
         this.inventory = Bukkit.createInventory(holder, size, this.title);
     }
 
@@ -35,10 +35,10 @@ public class ContainerInterface {
 
     private void initBackground(){
         ItemStackBuilder cis = new ItemStackBuilder(background, 1);
-        cis.setName("&a");
+        cis.setName(null, "&a");
         for(Integer slot : bg_slots){
             if(slot >= inventory.getSize()){
-                Message.error("Error in determining the background slot of the interface: (" + slot  + " >= " + inventory.getSize() + ")");
+                Message.error(null, "Error in determining the background slot of the interface: (" + slot  + " >= " + inventory.getSize() + ")");
                 return;
             }
             inventory.setItem(slot, cis.get());

@@ -10,22 +10,26 @@ public class InterfaceTemplatesList {
 
     public static void add(ContainerInterface template){
         String title = template.getTitle();
-        if(templates.containsKey(title)){ Message.error("Error when saving the inventory template: An inventory with this title already exists: \""
+        if(templates.containsKey(title)){ Message.error(null, "Error when saving the inventory template: An inventory with this title already exists: \""
                 + title + "\""); return; }
         templates.put(title, template);
     }
 
     public static ContainerInterface get(String title){
-        title = StringUtils.format(title);
-        return templates.getOrDefault(title, null).cloneTemplate();
+        title = StringUtils.format(title, null);
+        ContainerInterface result = templates.get(title);
+        if(result != null){
+            return result.cloneTemplate();
+        }
+        return null;
     }
     public static ContainerInterface getOrigin(String title){
-        title = StringUtils.format(title);
+        title = StringUtils.format(title, null);
         return templates.getOrDefault(title, null);
     }
 
     public static void update(String title, ContainerInterface template){
-        title = StringUtils.format(title);
+        title = StringUtils.format(title, null);
         if(!templates.containsKey(title)){
             add(template);
             return;

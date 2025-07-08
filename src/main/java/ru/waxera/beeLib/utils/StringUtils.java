@@ -1,5 +1,6 @@
 package ru.waxera.beeLib.utils;
 
+import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.BeeLib;
 
 import java.util.ArrayList;
@@ -7,10 +8,12 @@ import java.util.ArrayList;
 public class StringUtils {
 
 
-    public static String format(String message){
-        return colChar(language(message));
+    public static String format(String message, Plugin plugin){
+        plugin = plugin == null ? BeeLib.getInstance() : plugin;
+        return colChar(language(message, plugin));
     }
-    public static String language(String str){
+
+    public static String language(String str, Plugin plugin){
         ArrayList<String> def = new ArrayList<>(); //non-translatable
         ArrayList<String> trs = new ArrayList<>(); //translatable
 
@@ -24,7 +27,7 @@ public class StringUtils {
             }
         }
 
-        ArrayList<String> trsResult = splittedTranslate(trs);
+        ArrayList<String> trsResult = splittedTranslate(trs, plugin);
         StringBuilder result = new StringBuilder();
 
         int i_ = 0;
@@ -40,9 +43,9 @@ public class StringUtils {
         return result.toString();
     }
 
-    private static ArrayList<String> splittedTranslate(ArrayList<String> trs){
+    private static ArrayList<String> splittedTranslate(ArrayList<String> trs, Plugin plugin){
         ArrayList<String> result = new ArrayList<>();
-        Storage langStorage = BeeLib.getLanguage(BeeLib.nowLanguage());
+        Storage langStorage = LanguageManager.getInstance(plugin).getLanguage(LanguageManager.getInstance(plugin).nowLanguage());
         for(String str : trs){
             if(langStorage != null){
                 String translation = langStorage.getConfig().getString(str);

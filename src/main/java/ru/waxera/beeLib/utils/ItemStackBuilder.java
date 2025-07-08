@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.message.Message;
 
@@ -26,15 +27,15 @@ public class ItemStackBuilder {
         this.itemStack = itemStack;
     }
 
-    public void setName(String name) {
+    public void setName(Plugin plugin, String name) {
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(StringUtils.format(name));
+        meta.setDisplayName(StringUtils.format(name, plugin));
         itemStack.setItemMeta(meta);
     }
 
     @Description("Only for PLAYER_HEAD material!")
     public void setHead(Player player){
-        if(this.itemStack.getType() != Material.PLAYER_HEAD){ Message.error("Head Creation error: This item (" + this.itemStack.getType()
+        if(this.itemStack.getType() != Material.PLAYER_HEAD){ Message.error(BeeLib.getInstance(), "Head Creation error: This item (" + this.itemStack.getType()
                 + ") is not a player's head."); return; }
         SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
         if(meta != null && player != null && player.hasPlayedBefore()){
@@ -43,11 +44,11 @@ public class ItemStackBuilder {
         }
     }
 
-    public void setLore(String... lore) {
+    public void setLore(Plugin plugin, String... lore) {
         ItemMeta meta = itemStack.getItemMeta();
         ArrayList<String> loreFin = new ArrayList<>();
         for (String str : lore) {
-            loreFin.add(StringUtils.format(str));
+            loreFin.add(StringUtils.format(str, plugin));
         }
         meta.setLore(loreFin);
         itemStack.setItemMeta(meta);

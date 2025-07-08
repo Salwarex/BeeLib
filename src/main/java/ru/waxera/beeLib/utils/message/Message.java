@@ -5,22 +5,23 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.utils.StringUtils;
 
 import java.util.ArrayList;
 
 public class Message {
-    public static void send(MessageType type, Player player, String... message) {
+    public static void send(Plugin plugin, MessageType type, Player player, String... message) {
         switch (type) {
             case DEFAULT -> {
                 for (String mes : message) {
-                    send(player, mes);
+                    send(plugin, player, mes);
                 }
             }
             case BROADCAST -> {
                 ArrayList<Player> playersArray = new ArrayList<>(Bukkit.getOnlinePlayers());
                 for (String mes : message) {
-                    send(playersArray, mes);
+                    send(plugin, playersArray, mes);
                 }
             }
             case TITLE -> sendTitle(player, message[0], message[1]);
@@ -41,23 +42,23 @@ public class Message {
             }
             case LOGGING -> {
                 for (String mes : message) {
-                    send(mes);
+                    send(plugin, mes);
                 }
             }
         }
     }
 
-    public static void send(MessageType type, CommandSender sender, String... message) {
+    public static void send(Plugin plugin, MessageType type, CommandSender sender, String... message) {
         switch (type) {
             case DEFAULT -> {
                 for (String mes : message) {
-                    send(sender, mes);
+                    send(plugin, sender, mes);
                 }
             }
             case BROADCAST -> {
                 ArrayList<Player> playersArray = new ArrayList<>(Bukkit.getOnlinePlayers());
                 for (String mes : message) {
-                    send(playersArray, mes);
+                    send(plugin, playersArray, mes);
                 }
             }
             case TITLE -> sendTitle(sender, message[0], message[1]);
@@ -78,29 +79,29 @@ public class Message {
             }
             case LOGGING -> {
                 for (String mes : message) {
-                    send(mes);
+                    send(plugin, mes);
                 }
             }
         }
     }
 
     //default messages
-    public static void send(CommandSender sender, String message) {
-        sender.sendMessage(StringUtils.format(message));
+    public static void send(Plugin plugin, CommandSender sender, String message) {
+        sender.sendMessage(StringUtils.format(message, plugin));
     }
 
-    public static void send(Player player, String message) {
-        player.sendMessage(StringUtils.format(message));
+    public static void send(Plugin plugin, Player player, String message) {
+        player.sendMessage(StringUtils.format(message, plugin));
     }
 
-    public static void send(ArrayList<Player> receivers, String message) {
+    public static void send(Plugin plugin, ArrayList<Player> receivers, String message) {
         for (Player player : receivers) {
-            player.sendMessage(StringUtils.format(message));
+            player.sendMessage(StringUtils.format(message, plugin));
         }
     }
 
     //title messages
-    public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+    public static void sendTitle(Plugin plugin, Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         if (title == null) {
             title = "";
         }
@@ -108,7 +109,7 @@ public class Message {
             subtitle = "";
         }
 
-        player.sendTitle(StringUtils.format(title), StringUtils.format(subtitle), fadeIn, stay, fadeOut);
+        player.sendTitle(StringUtils.format(title, plugin), StringUtils.format(subtitle, plugin), fadeIn, stay, fadeOut);
     }
 
     private static void sendTitle(Player player, String title, String subtitle) {
@@ -136,8 +137,8 @@ public class Message {
         sendTitle(receivers, title, subtitle, 10, 100, 10);
     }
 
-    public static void sendActionBar(Player player, String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(StringUtils.format(message)));
+    public static void sendActionBar(Plugin plugin, Player player, String message) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(StringUtils.format(message, plugin)));
     }
 
     public static void sendActionBar(CommandSender sender, String message) {
@@ -154,11 +155,11 @@ public class Message {
     }
 
     //console logging
-    public static void send(String message) {
-        System.out.println(StringUtils.format(message));
+    public static void send(Plugin plugin, String message) {
+        System.out.println("[" + plugin.getName() + "]" + StringUtils.format(message, plugin));
     }
 
-    public static void error(String message) {
-        System.err.println(StringUtils.format(message));
+    public static void error(Plugin plugin, String message) {
+        System.err.println("[" + plugin.getName() + "]" + StringUtils.format(message, plugin));
     }
 }

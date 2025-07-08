@@ -2,7 +2,7 @@ package ru.waxera.beeLib.utils.command;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import ru.waxera.beeLib.BeeLib;
 
 import java.lang.reflect.Field;
@@ -10,14 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
-    public AbstractCommand(String command, String ... aliases) {
-        PluginCommand pluginCommand = BeeLib.getPlugin().getCommand(command);
+    public AbstractCommand(JavaPlugin plugin, String command, String ... aliases) {
+        plugin = plugin == null ? BeeLib.getInstance() : plugin;
+        PluginCommand pluginCommand = plugin.getCommand(command);
         if(pluginCommand != null){
             pluginCommand.setExecutor(this);
             pluginCommand.setTabCompleter(this);
 
             if(aliases.length != 0){
-                registerAliases(pluginCommand, BeeLib.getPlugin(), aliases);
+                registerAliases(pluginCommand, aliases);
             }
         }
     }
@@ -49,7 +50,7 @@ public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
         return  result;
     }
 
-    private void registerAliases(PluginCommand mainCommand, Plugin plugin, String[] aliases) {
+    private void registerAliases(PluginCommand mainCommand, String[] aliases) {
         try {
             Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);

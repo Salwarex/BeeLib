@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 public class MultiPageInterface extends ContainerInterface{
     private static HashMap<Player, Integer> pages = new HashMap<>();
-    private HashMap<Integer, Slot> content;
-    private HashMap<Integer, Slot> multipage_content;
+    private HashMap<Integer, Slot> content = new HashMap<>();
+    private HashMap<Integer, Slot> multipage_content = new HashMap<>();
 
     public MultiPageInterface(Player holder, String title, int page_size, boolean items_moving, ItemStack next_page, ItemStack prev_page) {
         super(holder, title, page_size);
@@ -42,11 +42,11 @@ public class MultiPageInterface extends ContainerInterface{
     }
 
     public void setItem(Integer index, ItemStack itemStack, Action action, boolean multipage){
-        if(content.containsKey(index)) { Message.error("Couldn't add an item to slot " + index + "! There is another item in it."); return; }
+        if(content.containsKey(index)) { Message.error(null,"Couldn't add an item to slot " + index + "! There is another item in it."); return; }
         Slot slot = new Slot(itemStack, action);
         if(!multipage) content.put(index, slot);
         else {
-            if(this.bg_slots.contains(index)) { Message.error("Couldn't add an item to slot " + index + "! There is background item in it."); return; }
+            if(this.bg_slots.contains(index)) { Message.error(null, "Couldn't add an item to slot " + index + "! There is background item in it."); return; }
             multipage_content.put(index, slot);
         }
     }
@@ -87,8 +87,8 @@ public class MultiPageInterface extends ContainerInterface{
 
         if(!this.items_moving || this.bg_slots.contains(index)) e.setCancelled(true);
 
-        if(player == null) { Message.error("Error when performing an action: The player is null."); return; }
-        if(index >= inventory.getSize()){ Message.error("Error when performing an action: The specified item index exceeds the interface size ("
+        if(player == null) { Message.error(null, "Error when performing an action: The player is null."); return; }
+        if(index >= inventory.getSize()){ Message.error(null, "Error when performing an action: The specified item index exceeds the interface size ("
                 + index + " >= " + this.inventory.getSize() + ")"); return; }
         Slot slot = content.getOrDefault(index, null);
         slot = slot == null ? multipage_content.getOrDefault(index, null) : slot;
