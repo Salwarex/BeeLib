@@ -17,6 +17,10 @@ public class InterfaceTemplatesList {
 
     public static ContainerInterface get(String title){
         title = StringUtils.format(title);
+        return templates.getOrDefault(title, null).cloneTemplate();
+    }
+    public static ContainerInterface getOrigin(String title){
+        title = StringUtils.format(title);
         return templates.getOrDefault(title, null);
     }
 

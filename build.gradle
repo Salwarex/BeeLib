@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'ru.waxera'
-version = '1.0.5'
+version = '1.0.6'
 
 repositories {
     mavenCentral()
@@ -70,7 +70,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'com.github.Salwarex'
             artifactId = 'BeeLib'
-            version = 'v1.0.5-alpha'
+            version = 'v1.0.6-alpha'
 
             from components.java
         }
