@@ -16,6 +16,7 @@ public final class BeeLib extends JavaPlugin{
     @Override
     public void onEnable(){
         instance = this;
+        new LanguageManager(instance, new Language[]{Language.ENGLISH, Language.RUSSIAN});
         checkDependecies();
     }
 

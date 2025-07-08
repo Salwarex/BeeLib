@@ -8,6 +8,8 @@ public class InterfaceHandler implements Listener {
 
     @EventHandler
     public void itemClick(InventoryClickEvent e){
+        if(e.getView().getTitle() == null || e.getCurrentItem() == null) return;
+
         String title = e.getView().getTitle();
         ContainerInterface containerInterface = InterfaceTemplatesList.get(title);
         if(containerInterface == null) return;

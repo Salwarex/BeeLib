@@ -5,13 +5,14 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import ru.waxera.beeLib.utils.ItemStackBuilder;
 import ru.waxera.beeLib.utils.StringUtils;
 import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.ArrayList;
 
-public class ContainerInterface {
+public class ContainerInterface implements Cloneable{
     protected Inventory inventory;
     protected ArrayList<Integer> bg_slots = new ArrayList<>();
     protected Material background = null;
@@ -49,15 +50,6 @@ public class ContainerInterface {
         InterfaceTemplatesList.add(this);
     }
 
-    public ContainerInterface cloneTemplate() {
-        try{
-            return (ContainerInterface) this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public void playerClickAction(InventoryClickEvent e) {}
 
     public String getTitle(){
@@ -65,5 +57,28 @@ public class ContainerInterface {
     }
     public void open(Player player){
         player.openInventory(inventory);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        ContainerInterface clone = (ContainerInterface) super.clone();
+
+        Inventory clonedInventory = Bukkit.createInventory(null, this.inventory.getSize(), this.title);
+        for (int i = 0; i < this.inventory.getSize(); i++) {
+            ItemStack item = this.inventory.getItem(i);
+            if (item != null) {
+                clonedInventory.setItem(i, item.clone());
+            }
+        }
+        clone.inventory = clonedInventory;
+
+        clone.bg_slots = new ArrayList<>(this.bg_slots);
+
+        clone.background = this.background;
+        clone.title = this.title;
+        clone.items_moving = this.items_moving;
+        clone.DEFAULT_INTERFACE_HANDLER = this.DEFAULT_INTERFACE_HANDLER;
+
+        return clone;
     }
 }

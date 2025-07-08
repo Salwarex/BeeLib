@@ -20,4 +20,8 @@ public class Slot {
     public ItemStack getItemStack(){
         return this.itemStack;
     }
+
+    public Action getAction(){
+        return this.action;
+    }
 }

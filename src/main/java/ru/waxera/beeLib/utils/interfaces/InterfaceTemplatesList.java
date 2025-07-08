@@ -15,11 +15,15 @@ public class InterfaceTemplatesList {
         templates.put(title, template);
     }
 
-    public static ContainerInterface get(String title){
+    public static ContainerInterface get(String title) {
         title = StringUtils.format(title, null);
         ContainerInterface result = templates.get(title);
         if(result != null){
-            return result.cloneTemplate();
+            try {
+                return (ContainerInterface) result.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }

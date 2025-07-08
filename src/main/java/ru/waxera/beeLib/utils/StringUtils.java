@@ -14,6 +14,7 @@ public class StringUtils {
     }
 
     public static String language(String str, Plugin plugin){
+        plugin = plugin == null ? BeeLib.getInstance() : plugin;
         ArrayList<String> def = new ArrayList<>(); //non-translatable
         ArrayList<String> trs = new ArrayList<>(); //translatable
 
@@ -44,6 +45,7 @@ public class StringUtils {
     }
 
     private static ArrayList<String> splittedTranslate(ArrayList<String> trs, Plugin plugin){
+        plugin = plugin == null ? BeeLib.getInstance() : plugin;
         ArrayList<String> result = new ArrayList<>();
         Storage langStorage = LanguageManager.getInstance(plugin).getLanguage(LanguageManager.getInstance(plugin).nowLanguage());
         for(String str : trs){

@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -156,10 +157,12 @@ public class Message {
 
     //console logging
     public static void send(Plugin plugin, String message) {
-        System.out.println("[" + plugin.getName() + "]" + StringUtils.format(message, plugin));
+        plugin = plugin == null ? BeeLib.getInstance() : plugin;
+        System.out.println("[" + plugin.getName() + "] " + StringUtils.format(message, plugin));
     }
 
     public static void error(Plugin plugin, String message) {
-        System.err.println("[" + plugin.getName() + "]" + StringUtils.format(message, plugin));
+        plugin = plugin == null ? BeeLib.getInstance() : plugin;
+        System.err.println("[" + plugin.getName() + "] " + StringUtils.format(message, plugin));
     }
 }

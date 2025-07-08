@@ -1,13 +1,14 @@
 package ru.waxera.beeLib.utils;
 
 import org.bukkit.plugin.Plugin;
+import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class LanguageManager {
-    private static HashMap<Plugin, LanguageManager> plugin_list;
+    private static HashMap<Plugin, LanguageManager> plugin_list = new HashMap<>();
     private final Plugin plugin;
     private ArrayList<Language> languages = new ArrayList<>();
     private HashMap<Language, Storage> lang = new HashMap<>();

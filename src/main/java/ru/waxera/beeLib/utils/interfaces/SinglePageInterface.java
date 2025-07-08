@@ -2,6 +2,7 @@ package ru.waxera.beeLib.utils.interfaces;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import ru.waxera.beeLib.utils.message.Message;
 
@@ -16,11 +17,10 @@ public class SinglePageInterface extends ContainerInterface{
     }
 
     public void setItem(Integer index, ItemStack itemStack, Action action){
-        if(items.containsKey(index)) { Message.error(null, "Couldn't add an item to slot " + index + "! There is another item in it."); return; }
         if(this.bg_slots.contains(index)) { Message.error(null, "Couldn't add an item to slot " + index + "! There is background item in it."); return; }
         if(index >= this.inventory.getSize()){ Message.error(null, "The specified item index exceeds the interface size (" + index + " >= " + this.inventory.getSize() + ")"); return;}
         Slot slot = new Slot(itemStack, action);
-        items.put(index, slot);
+        this.items.put(index, slot);
         initSlots();
     }
 
@@ -44,6 +44,8 @@ public class SinglePageInterface extends ContainerInterface{
 
     @Override
     public void playerClickAction(InventoryClickEvent e){
+        if(e.getClickedInventory().getType() != InventoryType.CHEST) { e.setCancelled(true); return; }
+
         Player player = (Player) e.getWhoClicked();
         Integer index = e.getSlot();
 
@@ -53,6 +55,21 @@ public class SinglePageInterface extends ContainerInterface{
         if(index >= inventory.getSize()){ Message.error(null, "Error when performing an action: The specified item index exceeds the interface size ("
                 + index + " >= " + this.inventory.getSize() + ")"); return; }
         Slot slot = items.getOrDefault(index, null);
+        if(slot == null) return;
         slot.execute(player);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        SinglePageInterface clone = (SinglePageInterface) super.clone();
+
+        HashMap<Integer, Slot> temp = new HashMap<>();
+        for (Integer key : this.items.keySet()) {
+            Slot originalSlot = this.items.get(key);
+            temp.put(key, new Slot(originalSlot.getItemStack().clone(), originalSlot.getAction()));
+        }
+        clone.items = temp;
+
+        return clone;
     }
 }
