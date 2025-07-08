@@ -23,7 +23,7 @@ public final class BeeLib{
         checkDependecies();
     }
 
-    public void initLanguages(Language[] languages){
+    public static void initLanguages(Language[] languages){
         for(Language language : languages){
             lang.put(language, new Storage(language.getFilename() + ".yml", "languages"));
         }
