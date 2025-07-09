@@ -158,11 +158,13 @@ public class Message {
     //console logging
     public static void send(Plugin plugin, String message) {
         plugin = plugin == null ? BeeLib.getInstance() : plugin;
-        System.out.println("[" + plugin.getName() + "] " + StringUtils.format(message, plugin));
+        System.out.println((!plugin.getName().equalsIgnoreCase("BeeLib") ? "[" + plugin.getName() + "] " : "")
+                + StringUtils.format(message, plugin));
     }
 
     public static void error(Plugin plugin, String message) {
         plugin = plugin == null ? BeeLib.getInstance() : plugin;
-        System.err.println("[" + plugin.getName() + "] " + StringUtils.format(message, plugin));
+        System.err.println((!plugin.getName().equalsIgnoreCase("BeeLib") ? "[" + plugin.getName() + "] " : "")
+                + StringUtils.format(message, plugin));
     }
 }

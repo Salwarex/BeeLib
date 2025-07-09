@@ -46,11 +46,6 @@ public class ContainerInterface implements Cloneable{
         }
     }
 
-    @Deprecated
-    public void saveTemplate(){
-        InterfaceTemplatesList.add(this);
-    }
-
     public void playerClickAction(InventoryClickEvent e) {}
 
     public String getTitle(){

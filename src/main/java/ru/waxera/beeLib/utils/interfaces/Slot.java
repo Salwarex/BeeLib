@@ -12,9 +12,9 @@ public class Slot {
         this.action = ac;
     }
 
-    public void execute(Player player){
+    public void execute(Player player, Object other){
         if (action == null) return;
-        action.run(player);
+        action.run(player, other);
     }
 
     public ItemStack getItemStack(){

@@ -56,7 +56,7 @@ public class SinglePageInterface extends ContainerInterface{
                 + index + " >= " + this.inventory.getSize() + ")"); return; }
         Slot slot = items.getOrDefault(index, null);
         if(slot == null) return;
-        slot.execute(player);
+        slot.execute(player, null);
     }
 
     @Override
