@@ -5,6 +5,7 @@ import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.HashMap;
 
+@Deprecated
 public class InterfaceTemplatesList {
     private static HashMap<String, ContainerInterface> templates = new HashMap<>();
 

@@ -10,11 +10,12 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class MultiPageInterface extends ContainerInterface{
-    private static HashMap<Player, Integer> pages = new HashMap<>();
     private HashMap<Integer, Slot> content = new HashMap<>();
     private HashMap<Integer, Slot> multipage_content = new HashMap<>();
     private ItemStack prev_mat_button;
     private ItemStack next_mat_button;
+
+    private int page = 0;
     private int max_pages = -1;
 
     public MultiPageInterface(Player holder, String title, int page_size, boolean items_moving, ItemStack prev_page, ItemStack next_page) {
@@ -30,24 +31,30 @@ public class MultiPageInterface extends ContainerInterface{
         int next_page_slot = this.inventory.getSize() - 1;
         int prev_page_slot = this.inventory.getSize() - 9;
 
-        this.setItem(next_page_slot, next_mat_button, (player) -> {
-            if(!pages.containsKey(player)){
-                pages.put(player, 0);
-            }
-            int now_page = pages.get(player);
-            if(now_page == max_pages) return;
-            pages.replace(player, now_page + 1);
-            open(player);
-        }, true);
-        this.setItem(prev_page_slot, prev_mat_button, (player -> {
-            if(!pages.containsKey(player)){
-                pages.put(player, 0);
-            }
-            int now_page = pages.get(player);
-            if(now_page == 0) return;
-            pages.replace(player, now_page-1);
-            open(player);
-        }), true);
+        if(page != max_pages){
+            this.setItem(next_page_slot, next_mat_button, (player) -> {
+                if(page == max_pages) return;
+                MultiPageInterface clone = null;
+                try{ clone = (MultiPageInterface) this.clone(); }
+                catch (CloneNotSupportedException e) { e.printStackTrace(); }
+                if(clone != null) clone.page += 1;
+
+                assert clone != null;
+                clone.open(player);
+            }, true);
+        }
+        if(page != 0){
+            this.setItem(prev_page_slot, prev_mat_button, (player -> {
+                if(page == 0) return;
+                MultiPageInterface clone = null;
+                try{ clone = (MultiPageInterface) this.clone(); }
+                catch (CloneNotSupportedException e) { e.printStackTrace(); }
+                if(clone != null) clone.page -= 1;
+
+                assert clone != null;
+                clone.open(player);
+            }), true);
+        }
     }
 
     public void setItem(Integer index, ItemStack itemStack, Action action, boolean multipage){
@@ -77,9 +84,6 @@ public class MultiPageInterface extends ContainerInterface{
 
     @Override
     public void open(Player player){
-        if(!pages.containsKey(player)) pages.put(player, 0);
-        int page = pages.get(player);
-
         for(Integer mp_content_index : multipage_content.keySet()){
             this.inventory.setItem(mp_content_index, multipage_content.get(mp_content_index).getItemStack());
         }
@@ -98,6 +102,7 @@ public class MultiPageInterface extends ContainerInterface{
             }
         }
         player.openInventory(this.inventory);
+        InterfaceOpenedList.put(player, this);
     }
 
     @Override

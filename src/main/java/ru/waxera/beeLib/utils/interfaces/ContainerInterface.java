@@ -46,6 +46,7 @@ public class ContainerInterface implements Cloneable{
         }
     }
 
+    @Deprecated
     public void saveTemplate(){
         InterfaceTemplatesList.add(this);
     }
@@ -57,6 +58,7 @@ public class ContainerInterface implements Cloneable{
     }
     public void open(Player player){
         player.openInventory(inventory);
+        InterfaceOpenedList.put(player, this);
     }
 
     @Override

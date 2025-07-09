@@ -1,5 +1,5 @@
 name: BeeLib
-version: '1.0.9-alpha'
+version: '1.0.10-alpha'
 main: ru.waxera.beeLib.BeeLib
 api-version: '1.21'
 prefix: BeeLib
