@@ -1,6 +1,7 @@
 package ru.waxera.beeLib.utils.interfaces;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 
 public class Slot {
@@ -12,9 +13,9 @@ public class Slot {
         this.action = ac;
     }
 
-    public void execute(Player player, Object other){
+    public void execute(Player player, Event e){
         if (action == null) return;
-        action.run(player, other);
+        action.run(player, e);
     }
 
     public ItemStack getItemStack(){

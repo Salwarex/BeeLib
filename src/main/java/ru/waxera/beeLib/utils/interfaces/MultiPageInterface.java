@@ -113,7 +113,7 @@ public class MultiPageInterface extends ContainerInterface{
         Slot slot = content.getOrDefault(index, null);
         slot = slot == null ? multipage_content.getOrDefault(index, null) : slot;
         if(slot == null) return;
-        slot.execute(player, null);
+        slot.execute(player, e);
     }
 
     @Override
