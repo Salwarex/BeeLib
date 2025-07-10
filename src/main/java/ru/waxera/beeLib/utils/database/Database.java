@@ -164,7 +164,7 @@ public class Database {
                 preparedStatement.setObject(index, value);
                 index++;
             }
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
         catch (SQLException ex) {
             ex.printStackTrace();
@@ -198,7 +198,7 @@ public class Database {
         catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     public ArrayList<ArrayList<Object>> getDataObjects(String select_modifier,
@@ -208,20 +208,24 @@ public class Database {
                                                        boolean[] where_ands){
         ArrayList<ArrayList<Object>> result = new ArrayList<>();
 
-        ArrayList<Object> objects = prepareData(new ArrayList<>(where_info.values()));
-        StringBuilder sql = new StringBuilder("SELECT " + select_modifier + " FROM " + table_name + " WHERE ");
-        int i = 0;
-        for(String key : where_info.keySet()){
-            String suffix = (i != where_info.size() - 1) ? (where_ands != null ? (where_ands[i] ? " AND " : " OR ") : " AND ") : ";";
-            sql.append(key).append(" =  ?").append(suffix);
-            i++;
+        StringBuilder sql = new StringBuilder("SELECT " + select_modifier + " FROM " + table_name + (where_info != null ? " WHERE " : ""));
+        if(where_info != null){
+            ArrayList<Object> objects = prepareData(new ArrayList<>(where_info.values()));
+            int i = 0;
+            for(String key : where_info.keySet()){
+                String suffix = (i != where_info.size() - 1) ? (where_ands != null ? (where_ands[i] ? " AND " : " OR ") : " AND ") : ";";
+                sql.append(key).append(" =  ?").append(suffix);
+                i++;
+            }
         }
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())){
             int index = 1;
-            for(Object value : where_info.values()){
-                preparedStatement.setObject(index, value);
-                index++;
+            if(where_info != null){
+                for(Object value : where_info.values()){
+                    preparedStatement.setObject(index, value);
+                    index++;
+                }
             }
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -231,6 +235,7 @@ public class Database {
                 }
                 result.add(row);
             }
+            return result;
         }
         catch (SQLException ex) {
             ex.printStackTrace();
