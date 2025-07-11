@@ -3,6 +3,7 @@ package ru.waxera.beeLib.utils.interfaces.hotbar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -17,15 +18,29 @@ public class HotbarListener implements Listener {
     public void onInteract(PlayerInteractEvent e){
         Player player = e.getPlayer();
         if(!HotbarInterfaceOpenedList.contains(player)) return;
+        e.setCancelled(true);
         HotbarInterface hotbarInterface = HotbarInterfaceOpenedList.get(player);
         int i = getSlot(e.getItem(), player);
+        hotbarInterface.execute(i, e);
+    }
+
+    @EventHandler
+    public void onBlock(BlockPlaceEvent e){
+        Player player = e.getPlayer();
+        if(!HotbarInterfaceOpenedList.contains(player)) return;
+        e.setCancelled(true);
+        HotbarInterface hotbarInterface = HotbarInterfaceOpenedList.get(player);
+        int i = getSlot(e.getItemInHand(), player);
         hotbarInterface.execute(i, e);
     }
 
     private int getSlot(ItemStack item, Player player){
         PlayerInventory playerInventory = player.getInventory();
         for(int i = 0; i < 9; i++){
-            if(item == playerInventory.getItem(i)) return i;
+            if(item == null) return -1;
+            if(playerInventory.getItem(i) != null){
+                if(item.getType() == playerInventory.getItem(i).getType()) return i;
+            }
         }
         return -1;
     }
@@ -58,4 +73,6 @@ public class HotbarListener implements Listener {
         if(holdingItems == null) return;
         holdingItems.restore();
     }
+
+
 }

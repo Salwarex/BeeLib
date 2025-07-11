@@ -19,8 +19,11 @@ public class HotbarInterface {
         this.slots = slots;
     }
 
+    public void setHoldingItems(HoldingItems holdingItems){
+        this.holdingItems = holdingItems;
+    }
+
     public void open(){
-        this.holdingItems = new HoldingItems(this.holder);
         PlayerInventory inventory = this.holder.getInventory();
         for(int i = 0; i < 9; i++){
             inventory.setItem(i, slots[i].getItemStack());
