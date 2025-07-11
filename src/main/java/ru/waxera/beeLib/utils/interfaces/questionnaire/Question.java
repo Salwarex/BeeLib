@@ -1,13 +1,16 @@
 package ru.waxera.beeLib.utils.interfaces.questionnaire;
 
+import org.bukkit.plugin.Plugin;
+import ru.waxera.beeLib.utils.StringUtils;
+
 public class Question {
     private final String variable;
     private final String question;
     private String answer;
 
-    public Question(String variable, String question){
+    public Question(Plugin plugin, String variable, String question){
         this.variable = variable;
-        this.question = question;
+        this.question = StringUtils.format(question, plugin);
     }
 
     public void setAnswer(String answer){
