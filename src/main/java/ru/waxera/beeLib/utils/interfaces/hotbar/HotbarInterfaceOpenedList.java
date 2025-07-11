@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
-@Deprecated
+
 public class HotbarInterfaceOpenedList {
     private static HashMap<Player, HotbarInterface> list = new HashMap<>();
 

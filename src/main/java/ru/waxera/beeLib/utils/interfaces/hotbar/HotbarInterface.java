@@ -1,40 +1,42 @@
 package ru.waxera.beeLib.utils.interfaces.hotbar;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
-import ru.waxera.beeLib.BeeLib;
-import ru.waxera.beeLib.utils.Storage;
 import ru.waxera.beeLib.utils.interfaces.Slot;
 import ru.waxera.beeLib.utils.message.Message;
 
-@Deprecated
+
 public class HotbarInterface {
+    private final Player holder;
     private Slot[] slots;
-    private ItemStack[] defaultItems = new ItemStack[9];
-    private Storage keepItemsFile;
+    private HoldingItems holdingItems;
 
-    public HotbarInterface(Plugin plugin, Slot[] slots, String keepItemsFileName){
+    public HotbarInterface(Plugin plugin, Player holder, Slot[] slots){
+        this.holder = holder;
+        if(slots.length != 9) { Message.error(null, "&cSlots list length can't different from 9");}
         this.slots = slots;
-        if(slots.length != 9) { Message.error(null, "The number of slots in HotbarInterface should be 9. Fill the extra slots with pacifiers from Material.AIR! (" + slots.length + ")"); return;}
-        this.keepItemsFile = new Storage(keepItemsFileName, "hotbar-keeps", BeeLib.getInstance());
     }
 
-    public void open(Player player){
-        PlayerInventory inventory = player.getInventory();
+    public void open(){
+        this.holdingItems = new HoldingItems(this.holder);
+        PlayerInventory inventory = this.holder.getInventory();
         for(int i = 0; i < 9; i++){
-            defaultItems[i] = inventory.getItem(i);
-            keepItemsFile.getConfig().set(player.getName() + ".inventory", defaultItems[i]);
+            inventory.setItem(i, slots[i].getItemStack());
         }
-        keepItemsFile.save();
-
-        //продолжить
+        HotbarInterfaceOpenedList.put(holder, this);
     }
 
-    public void setDefaultItems(ItemStack[] stacks){
-        if(stacks.length != 9) { Message.error(null,"The number of saved items should be 9."); return;}
-        this.defaultItems = stacks;
+    public void close(){
+        holdingItems.restore();
+        HotbarInterfaceOpenedList.remove(holder);
+    }
+
+    public void execute(int index, Event e){
+        Slot slot = slots[index];
+        if(slot == null) return;
+        slot.execute(holder, e);
     }
 
 }
