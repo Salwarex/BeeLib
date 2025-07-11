@@ -15,7 +15,7 @@ public class QuestionnaireHandler implements Listener {
         Player player = e.getPlayer();
         if(contains(player)){
             Questionnaire questionnaire = list.get(player);
-            if(questionnaire.isOver()) {questionnaire.endQuestionnaire(); return;}
+            if(questionnaire.isOver()) {questionnaire.endQuestionnaire(false); return;}
             e.setCancelled(true);
             String answer = e.getMessage();
             questionnaire.setAnswer(answer);

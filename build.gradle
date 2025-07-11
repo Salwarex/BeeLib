@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'ru.waxera'
-version = '1.2.2-alpha'
+version = '1.2.3-alpha'
 
 repositories {
     mavenCentral()
