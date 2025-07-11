@@ -1,6 +1,8 @@
 package ru.waxera.beeLib.utils.interfaces.questionnaire;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.interfaces.Action;
 import ru.waxera.beeLib.utils.message.Message;
@@ -12,11 +14,19 @@ public class Questionnaire {
     private Player player;
     private HashMap<String, Question> questions = new HashMap<>();
     private Action action;
+    private final Plugin plugin;
     private int actual_question = 0;
+    private Sound question_sound = null;
 
-    public Questionnaire(Player player, Action action, Question ... questions){
+    public Questionnaire(Plugin plugin,
+                         Player player,
+                         Action action,
+                         Sound question_sound,
+                         Question ... questions){
+        this.plugin = plugin;
         this.player = player;
         this.action = action;
+        this.question_sound = question_sound;
         for(Question question : questions){
             this.questions.put(question.getVariable(), question);
         }
@@ -41,6 +51,7 @@ public class Questionnaire {
             endQuestionnaire();
             return;
         }
+        if(question_sound != null) player.playSound(player.getLocation(), question_sound, 1, 1);
         Question question = getActualQuestion();
         Message.send(BeeLib.getInstance(), player, question.getQuestion());
     }
@@ -51,6 +62,7 @@ public class Questionnaire {
     }
 
     public void setAnswer(String answer){
+        Message.send(this.plugin, player, "@your-answer@: " + answer);
         Question question = getActualQuestion();
         if(question == null){
             endQuestionnaire();
