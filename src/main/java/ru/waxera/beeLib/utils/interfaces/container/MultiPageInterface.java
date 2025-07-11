@@ -1,15 +1,17 @@
-package ru.waxera.beeLib.utils.interfaces;
+package ru.waxera.beeLib.utils.interfaces.container;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import ru.waxera.beeLib.utils.interfaces.Action;
+import ru.waxera.beeLib.utils.interfaces.Slot;
 import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.Collections;
 import java.util.HashMap;
 
-public class MultiPageInterface extends ContainerInterface{
+public class MultiPageInterface extends ContainerInterface {
     private HashMap<Integer, Slot> content = new HashMap<>();
     private HashMap<Integer, Slot> multipage_content = new HashMap<>();
     private ItemStack prev_mat_button;

@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.utils.interfaces;
+package ru.waxera.beeLib.utils.interfaces.container;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,7 +12,7 @@ import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.ArrayList;
 
-public class ContainerInterface implements Cloneable{
+public abstract class ContainerInterface implements Cloneable{
     protected Inventory inventory;
     protected ArrayList<Integer> bg_slots = new ArrayList<>();
     protected Material background = null;

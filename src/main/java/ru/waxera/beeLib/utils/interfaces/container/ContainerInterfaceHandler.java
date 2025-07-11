@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.utils.interfaces;
+package ru.waxera.beeLib.utils.interfaces.container;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
-public class InterfaceHandler implements Listener {
+public class ContainerInterfaceHandler implements Listener {
 
     @EventHandler
     public void itemClick(InventoryClickEvent e){ //IOL

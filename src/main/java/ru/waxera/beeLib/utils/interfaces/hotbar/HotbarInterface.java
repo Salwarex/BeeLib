@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.utils.interfaces;
+package ru.waxera.beeLib.utils.interfaces.hotbar;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -6,6 +6,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.Storage;
+import ru.waxera.beeLib.utils.interfaces.Slot;
 import ru.waxera.beeLib.utils.message.Message;
 
 @Deprecated

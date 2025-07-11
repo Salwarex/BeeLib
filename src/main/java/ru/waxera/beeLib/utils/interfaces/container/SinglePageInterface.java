@@ -1,14 +1,16 @@
-package ru.waxera.beeLib.utils.interfaces;
+package ru.waxera.beeLib.utils.interfaces.container;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import ru.waxera.beeLib.utils.interfaces.Action;
+import ru.waxera.beeLib.utils.interfaces.Slot;
 import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.HashMap;
 
-public class SinglePageInterface extends ContainerInterface{
+public class SinglePageInterface extends ContainerInterface {
     private HashMap<Integer, Slot> items = new HashMap<>();
 
     public SinglePageInterface(Player holder, String title, int size, boolean items_moving) {

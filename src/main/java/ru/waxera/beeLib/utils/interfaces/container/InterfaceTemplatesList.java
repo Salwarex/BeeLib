@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.utils.interfaces;
+package ru.waxera.beeLib.utils.interfaces.container;
 
 import ru.waxera.beeLib.utils.StringUtils;
 import ru.waxera.beeLib.utils.message.Message;

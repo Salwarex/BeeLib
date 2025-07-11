@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.utils.interfaces;
+package ru.waxera.beeLib.utils.interfaces.hotbar;
 
 import org.bukkit.entity.Player;
 
