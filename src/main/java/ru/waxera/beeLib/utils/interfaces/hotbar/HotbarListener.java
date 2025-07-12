@@ -21,6 +21,7 @@ public class HotbarListener implements Listener {
         e.setCancelled(true);
         HotbarInterface hotbarInterface = HotbarInterfaceOpenedList.get(player);
         int i = getSlot(e.getItem(), player);
+        if(i < 0 || i > 8) return;
         hotbarInterface.execute(i, e);
     }
 
@@ -31,6 +32,7 @@ public class HotbarListener implements Listener {
         e.setCancelled(true);
         HotbarInterface hotbarInterface = HotbarInterfaceOpenedList.get(player);
         int i = getSlot(e.getItemInHand(), player);
+        if(i < 0 || i > 8) return;
         hotbarInterface.execute(i, e);
     }
 
