@@ -10,8 +10,8 @@ public class LineParticleFigure extends ParticleFigure {
 
     public LineParticleFigure(Particle particle, Location location, LineParticleType type,
                               int segments, double step, double x_angle, double y_angle, double z_angle,
-                              int count, int period, Color color){
-        super(particle, location, count, 0, 0, 0, 0, x_angle, y_angle, z_angle, period, segments, step, color);
+                              int count, int period, Particle.DustOptions options){
+        super(particle, location, count, 0, 0, 0, 0, x_angle, y_angle, z_angle, period, segments, step, options);
         this.type = type;
     }
 

@@ -22,7 +22,7 @@ public abstract class ParticleFigure {
     protected int period;
     protected int segments;
     protected double step;
-    protected Color color;
+    protected Particle.DustOptions options;
 
     private BukkitTask task;
 
@@ -39,7 +39,7 @@ public abstract class ParticleFigure {
                              int period,
                              int segments,
                              double step,
-                             Color color){
+                             Particle.DustOptions options){
         this.particle = particle;
         this.location = location;
         this.count = count;
@@ -53,7 +53,7 @@ public abstract class ParticleFigure {
         this.period = period;
         this.segments = segments;
         this.step = step;
-        this.color = color;
+        this.options = options;
     }
 
 
@@ -111,8 +111,8 @@ public abstract class ParticleFigure {
         World world = location.getWorld();
         if (world == null) return;
 
-        if(color == null) world.spawnParticle(particle, location, count, offsetX, offsetY, offsetZ, extra);
-        else world.spawnParticle(particle, location, count, offsetX, offsetY, offsetZ, extra, color);
+        if(options == null) world.spawnParticle(particle, location, count, offsetX, offsetY, offsetZ, extra);
+        else world.spawnParticle(particle, location, count, offsetX, offsetY, offsetZ, extra, options);
     }
 
     public void execute(){}
