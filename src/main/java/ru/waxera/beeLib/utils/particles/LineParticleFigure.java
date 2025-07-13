@@ -4,7 +4,6 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 
-@Deprecated
 public class LineParticleFigure extends ParticleFigure {
 
     private LineParticleType type;
@@ -46,10 +45,4 @@ public class LineParticleFigure extends ParticleFigure {
 
         displayParticle(rotatedLoc);
     }
-}
-
-enum LineParticleType{
-    UPPER_DOWN,
-    DOWN_UPPER,
-    CENTER
 }
