@@ -1,5 +1,6 @@
 package ru.waxera.beeLib.utils.particles;
 
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
@@ -22,6 +23,7 @@ public abstract class ParticleFigure {
     protected int period;
     protected int segments;
     protected double step;
+    protected Color color;
 
     private BukkitTask task;
 
@@ -37,7 +39,8 @@ public abstract class ParticleFigure {
                              double z_angle,
                              int period,
                              int segments,
-                             double step){
+                             double step,
+                             Color color){
         this.particle = particle;
         this.location = location;
         this.count = count;
@@ -51,6 +54,7 @@ public abstract class ParticleFigure {
         this.period = period;
         this.segments = segments;
         this.step = step;
+        this.color = color;
     }
 
 
@@ -108,7 +112,8 @@ public abstract class ParticleFigure {
         World world = location.getWorld();
         if (world == null) return;
 
-        world.spawnParticle(particle, location, count, offsetX, offsetY, offsetZ, extra);
+        if(color == null) world.spawnParticle(particle, location, count, offsetX, offsetY, offsetZ, extra);
+        else world.spawnParticle(particle, location, count, offsetX, offsetY, offsetZ, extra, color);
     }
 
     public void execute(){}
