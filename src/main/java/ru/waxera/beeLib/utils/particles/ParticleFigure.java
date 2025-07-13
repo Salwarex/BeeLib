@@ -8,7 +8,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import ru.waxera.beeLib.BeeLib;
 
-@Deprecated
 public abstract class ParticleFigure {
     protected Particle particle;
     protected Location location;
