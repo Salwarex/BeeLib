@@ -2,6 +2,7 @@ package ru.waxera.beeLib.utils.particles;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import ru.waxera.beeLib.utils.message.Message;
 
 public class LineParticleFigure extends ParticleFigure {
 
@@ -43,5 +44,6 @@ public class LineParticleFigure extends ParticleFigure {
         Location rotatedLoc = rotateLocation(particleLoc);
 
         displayParticle(rotatedLoc);
+        Message.send(null, "отрисовка " + particleLoc);
     }
 }
