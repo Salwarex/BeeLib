@@ -1,6 +1,5 @@
 package ru.waxera.beeLib.utils.particles;
 
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 
@@ -25,10 +24,10 @@ public class LineParticleFigure extends ParticleFigure {
     @Override
     public void execute() {
         switch (type) {
-            case UPPER_DOWN:
+            case BOTTOM_TOP:
                 draw(this::drawLineStep, -segments, 0);
                 break;
-            case DOWN_UPPER:
+            case TOP_BOTTOM:
                 draw(this::drawLineStep, 0, segments);
                 break;
             case CENTER:
