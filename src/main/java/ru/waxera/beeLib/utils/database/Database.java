@@ -148,21 +148,28 @@ public class Database {
                            HashMap<String, Object> where_info,
                            boolean[] where_ands){
         new_data = prepareData(new_data);
-        ArrayList<Object> objects = prepareData(new ArrayList<>(where_info.values()));
-        StringBuilder sql = new StringBuilder("UPDATE " + table_name + " SET " + update_column + " = ? WHERE ");
-        int i = 0;
-        for(String key : where_info.keySet()){
-            String suffix = (i != where_info.size() - 1) ? (where_ands != null ? (where_ands[i] ? " AND " : " OR ") : " AND ") : ";";
-            sql.append(key).append(" =  ?").append(suffix);
-            i++;
+        ArrayList<Object> objects;
+        StringBuilder sql = new StringBuilder("UPDATE " + table_name + " SET " + update_column + " = ?" + (where_info != null ? " WHERE " : ""));
+        if(where_info != null) {
+            objects = prepareData(new ArrayList<>(where_info.values()));
+            int i = 0;
+            for(String key : where_info.keySet()){
+                String suffix = (i != where_info.size() - 1) ? (where_ands != null ? (where_ands[i] ? " AND " : " OR ") : " AND ") : ";";
+                sql.append(key).append(" =  ?").append(suffix);
+                i++;
+            }
         }
+        else objects = new ArrayList<>();
+
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())){
             preparedStatement.setObject(1, new_data);
             int index = 2;
-            for(Object value : objects){
-                preparedStatement.setObject(index, value);
-                index++;
+            if(!objects.isEmpty()){
+                for(Object value : objects){
+                    preparedStatement.setObject(index, value);
+                    index++;
+                }
             }
             preparedStatement.executeUpdate();
         }
