@@ -7,8 +7,12 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.concurrent.TimeUnit;
 
 public class DateUtils {
-    public static Timestamp getNow(){
+    public static Timestamp getTodayStart(){
         return Timestamp.valueOf(LocalDate.now().atStartOfDay());
+    }
+
+    public static Timestamp getNow(){
+        return new Timestamp(System.currentTimeMillis());
     }
 
     public static Timestamp getLast(DayOfWeek target){
