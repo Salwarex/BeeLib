@@ -215,9 +215,10 @@ public class Database {
                                                        boolean[] where_ands){
         ArrayList<ArrayList<Object>> result = new ArrayList<>();
 
+        ArrayList<Object> objects = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT " + select_modifier + " FROM " + table_name + (where_info != null ? " WHERE " : ""));
         if(where_info != null){
-            ArrayList<Object> objects = prepareData(new ArrayList<>(where_info.values()));
+            objects = prepareData(new ArrayList<>(where_info.values()));
             int i = 0;
             for(String key : where_info.keySet()){
                 String suffix = (i != where_info.size() - 1) ? (where_ands != null ? (where_ands[i] ? " AND " : " OR ") : " AND ") : ";";
@@ -229,7 +230,7 @@ public class Database {
             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())){
             int index = 1;
             if(where_info != null){
-                for(Object value : where_info.values()){
+                for(Object value : objects){
                     preparedStatement.setObject(index, value);
                     index++;
                 }
@@ -248,6 +249,36 @@ public class Database {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public int count(String table_name, HashMap<String, Object> where_info, boolean[] where_ands){
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM " + table_name + (where_info != null ? " WHERE " : ""));
+        ArrayList<Object> objects = new ArrayList<>();
+        if(where_info != null){
+            objects = prepareData(new ArrayList<>(where_info.values()));
+            int i = 0;
+            for(String key : where_info.keySet()){
+                String suffix = (i != where_info.size() - 1) ? (where_ands != null ? (where_ands[i] ? " AND " : " OR ") : " AND ") : ";";
+                sql.append(key).append(" =  ?").append(suffix);
+                i++;
+            }
+        }
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())){
+            int index = 1;
+            for(Object value : objects){
+                preparedStatement.setObject(index, value);
+                index++;
+            }
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt(1);
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return -1;
     }
 
     public void execSQL(String sql) {
