@@ -44,6 +44,5 @@ public class LineParticleFigure extends ParticleFigure {
         Location rotatedLoc = rotateLocation(particleLoc);
 
         displayParticle(rotatedLoc);
-        Message.send(null, "отрисовка " + particleLoc);
     }
 }
