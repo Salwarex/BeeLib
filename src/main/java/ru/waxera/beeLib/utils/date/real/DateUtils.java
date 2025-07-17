@@ -17,6 +17,15 @@ public class DateUtils {
         return Timestamp.valueOf(lastTarget.atStartOfDay());
     }
 
+    public static double getHoursBetween(Timestamp start, Timestamp end) {
+        if (start == null || end == null) {
+            throw new IllegalArgumentException("Timestamp не может быть null");
+        }
+
+        long diffMillis = end.getTime() - start.getTime();
+        return (double) diffMillis / TimeUnit.HOURS.toMillis(1);
+    }
+
     public static double getDaysBetween(Timestamp start, Timestamp end) {
         if (start == null || end == null) {
             throw new IllegalArgumentException("Timestamp не может быть null");
