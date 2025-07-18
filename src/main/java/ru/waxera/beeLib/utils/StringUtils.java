@@ -4,6 +4,7 @@ import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.BeeLib;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StringUtils {
 
@@ -72,6 +73,51 @@ public class StringUtils {
     public static boolean isUuid(String str) {
         String uuidRegex = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[34][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$";
         return str != null && str.matches(uuidRegex);
+    }
+
+    public static String[] splitString(String input, int maxLength) {
+        if (input == null || input.isEmpty() || maxLength <= 0) {
+            return new String[0];
+        }
+
+        List<String> result = new ArrayList<>();
+        
+        String specialSplitter = "\u0000";
+        String[] parts = input.replace("@n", specialSplitter).split(specialSplitter);
+
+        int globalIndex = 0;
+        for (String part : parts) {
+            if (part.isEmpty()) continue;
+
+            int start = 0;
+            int len = part.length();
+
+            while (start < len) {
+                int end = Math.min(start + maxLength, len);
+
+                if (end == len) {
+                    result.add(part.substring(start, end));
+                    start = end;
+                } else {
+                    int lastSpace = -1;
+                    for (int i = start; i < end; i++) {
+                        if (Character.isWhitespace(part.charAt(i))) {
+                            lastSpace = i;
+                        }
+                    }
+
+                    if (lastSpace != -1 && lastSpace > start) {
+                        result.add(part.substring(start, lastSpace));
+                        start = lastSpace + 1;
+                    } else {
+                        result.add(part.substring(start, end));
+                        start = end;
+                    }
+                }
+            }
+        }
+
+        return result.toArray(new String[0]);
     }
 
 }

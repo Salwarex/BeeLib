@@ -18,6 +18,7 @@ public class MultiPageInterface extends ContainerInterface {
     private ItemStack next_mat_button;
 
     private int max_pages = -1;
+    private int actual_page = -1;
 
     public MultiPageInterface(Player holder, String title, int page_size, boolean items_moving, ItemStack prev_page, ItemStack next_page) {
         super(holder, title, page_size);
@@ -73,6 +74,7 @@ public class MultiPageInterface extends ContainerInterface {
     }
 
     public void open(Player player, Integer page){
+        this.actual_page = page;
         this.inventory.clear();
         this.setBackground(this.bg_slots, this.background);
         createNavButtons(page);
@@ -105,13 +107,12 @@ public class MultiPageInterface extends ContainerInterface {
         if(e.getClickedInventory().getType() != InventoryType.CHEST) { e.setCancelled(true); return; }
 
         Player player = (Player) e.getWhoClicked();
-        Integer index = e.getSlot();
+        Integer index = e.getSlot() + (this.inventory.getSize() * this.actual_page);
+        if(multipage_content.containsKey(e.getSlot())) index = e.getSlot();
 
         if(!this.items_moving || this.bg_slots.contains(index)) e.setCancelled(true);
 
         if(player == null) { Message.error(null, "Error when performing an action: The player is null."); return; }
-        if(index >= inventory.getSize()){ Message.error(null, "Error when performing an action: The specified item index exceeds the interface size ("
-                + index + " >= " + this.inventory.getSize() + ")"); return; }
         Slot slot = content.getOrDefault(index, null);
         slot = slot == null ? multipage_content.getOrDefault(index, null) : slot;
         if(slot == null) return;
