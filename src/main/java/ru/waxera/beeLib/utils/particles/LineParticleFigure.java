@@ -2,9 +2,8 @@ package ru.waxera.beeLib.utils.particles;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import ru.waxera.beeLib.utils.message.Message;
 
-public class LineParticleFigure extends ParticleFigure {
+public class LineParticleFigure extends AbstractParticleFigure implements ParticleFigure{
 
     private LineParticleType type;
 
@@ -22,7 +21,6 @@ public class LineParticleFigure extends ParticleFigure {
         this.extra = extra;
     }
 
-    @Override
     public void execute() {
         switch (type) {
             case BOTTOM_TOP:
