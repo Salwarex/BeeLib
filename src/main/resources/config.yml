@@ -1,0 +1,4 @@
+services:
+  player-data-storage: true
+
+version: 1

@@ -2,6 +2,7 @@ package ru.waxera.beeLib.utils;
 
 import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.BeeLib;
+import ru.waxera.beeLib.utils.data.storages.fileStorage.FileStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class StringUtils {
     private static ArrayList<String> splittedTranslate(ArrayList<String> trs, Plugin plugin){
         plugin = plugin == null ? BeeLib.getInstance() : plugin;
         ArrayList<String> result = new ArrayList<>();
-        Storage langStorage = LanguageManager.getInstance(plugin).getLanguage(LanguageManager.getInstance(plugin).nowLanguage());
+        FileStorage langStorage = LanguageManager.getInstance(plugin).getLanguage(LanguageManager.getInstance(plugin).nowLanguage());
         for(String str : trs){
             if(langStorage != null){
                 String translation = langStorage.getConfig().getString(str);

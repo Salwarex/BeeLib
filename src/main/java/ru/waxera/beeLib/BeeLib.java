@@ -5,23 +5,32 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.waxera.beeLib.utils.Language;
 import ru.waxera.beeLib.utils.LanguageManager;
-import ru.waxera.beeLib.utils.Storage;
-import ru.waxera.beeLib.utils.interfaces.container.ContainerInterfaceHandler;
-import ru.waxera.beeLib.utils.interfaces.hotbar.HotbarListener;
-import ru.waxera.beeLib.utils.interfaces.hotbar.RestoreHub;
-import ru.waxera.beeLib.utils.interfaces.questionnaire.QuestionnaireHandler;
+import ru.waxera.beeLib.utils.data.storages.fileStorage.FileStorage;
+import ru.waxera.beeLib.utils.data.LocalDataHandler;
+import ru.waxera.beeLib.utils.gui.container.ContainerInterfaceHandler;
+import ru.waxera.beeLib.utils.gui.hotbar.HotbarListener;
+import ru.waxera.beeLib.utils.gui.hotbar.RestoreHub;
+import ru.waxera.beeLib.utils.gui.questionnaire.QuestionnaireHandler;
+import ru.waxera.beeLib.utils.player.PlayerDataStorage;
 
 import java.util.HashMap;
 
 public final class BeeLib extends JavaPlugin{
     private static HashMap<String, Boolean> softDeps = new HashMap<>();
     private static BeeLib instance;
-    private static Storage holding;
+    private static FileStorage holding;
+    private static LocalDataHandler dataHandler;
+    private static PlayerDataStorage playerDataStorage = null;
 
     @Override
     public void onEnable(){
         instance = this;
-        holding = new Storage("holding.yml", "hotbar-interface", BeeLib.getInstance());
+        saveDefaultConfig();
+        holding = new FileStorage("holding.yml", "hotbar-interface", BeeLib.getInstance());
+        if(BeeLib.getInstance().getConfig().getBoolean("services.player-data-storage", true)){
+            playerDataStorage = ;
+        }
+        dataHandler = new LocalDataHandler();
         new LanguageManager(instance, new Language[]{Language.ENGLISH, Language.RUSSIAN});
         checkDependecies();
         new RestoreHub();
@@ -49,5 +58,8 @@ public final class BeeLib extends JavaPlugin{
     public static BeeLib getInstance(){
         return instance;
     }
-    public static Storage getHolding(){ return holding; }
+    public static FileStorage getHolding(){ return holding; }
+    public static LocalDataHandler getDataHandler(){
+        return dataHandler;
+    }
 }

@@ -1,7 +1,7 @@
 package ru.waxera.beeLib.utils;
 
 import org.bukkit.plugin.Plugin;
-import ru.waxera.beeLib.BeeLib;
+import ru.waxera.beeLib.utils.data.storages.fileStorage.FileStorage;
 import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ public class LanguageManager {
     private static HashMap<Plugin, LanguageManager> plugin_list = new HashMap<>();
     private final Plugin plugin;
     private ArrayList<Language> languages = new ArrayList<>();
-    private HashMap<Language, Storage> lang = new HashMap<>();
+    private HashMap<Language, FileStorage> lang = new HashMap<>();
 
     public LanguageManager(Plugin plugin, Language[] languages){
         if(plugin_list.containsKey(plugin)){
@@ -23,11 +23,11 @@ public class LanguageManager {
         plugin_list.put(this.plugin, this);
 
         for(Language language : languages){
-            lang.put(language, new Storage(language.getFilename() + ".yml", "languages", plugin));
+            lang.put(language, new FileStorage(language.getFilename() + ".yml", "languages", plugin));
         }
     }
 
-    public Storage getLanguage(Language language){
+    public FileStorage getLanguage(Language language){
         return lang.get(language);
     }
     public Language nowLanguage(){
