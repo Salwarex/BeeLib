@@ -1,6 +1,6 @@
 package ru.waxera.beeLib.utils.player;
 
-import ru.waxera.beeLib.utils.data.storages.mapStorage.IrreplaceableMapStorage;
+import ru.waxera.beeLib.utils.data.storages.map.IrreplaceableMapStorage;
 
 import java.util.List;
 import java.util.UUID;

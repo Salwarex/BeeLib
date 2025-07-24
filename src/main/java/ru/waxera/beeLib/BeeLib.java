@@ -5,7 +5,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.waxera.beeLib.utils.Language;
 import ru.waxera.beeLib.utils.LanguageManager;
-import ru.waxera.beeLib.utils.data.storages.fileStorage.FileStorage;
+import ru.waxera.beeLib.utils.data.storages.file.FileStorage;
 import ru.waxera.beeLib.utils.data.LocalDataHandler;
 import ru.waxera.beeLib.utils.gui.container.ContainerInterfaceHandler;
 import ru.waxera.beeLib.utils.gui.hotbar.HotbarListener;
@@ -28,7 +28,7 @@ public final class BeeLib extends JavaPlugin{
         saveDefaultConfig();
         holding = new FileStorage("holding.yml", "hotbar-interface", BeeLib.getInstance());
         if(BeeLib.getInstance().getConfig().getBoolean("services.player-data-storage", true)){
-            playerDataStorage = ;
+            playerDataStorage = dataHandler.getPlayerDataStorage();
         }
         dataHandler = new LocalDataHandler();
         new LanguageManager(instance, new Language[]{Language.ENGLISH, Language.RUSSIAN});
@@ -62,4 +62,5 @@ public final class BeeLib extends JavaPlugin{
     public static LocalDataHandler getDataHandler(){
         return dataHandler;
     }
+    public static PlayerDataStorage getPlayerDataStorage(){ return playerDataStorage; }
 }

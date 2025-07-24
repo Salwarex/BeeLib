@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.utils.data.storages.mapStorage;
+package ru.waxera.beeLib.utils.data.storages.map;
 
 import ru.waxera.beeLib.exceptions.storages.KeyAlreadyUsedException;
 import ru.waxera.beeLib.utils.data.storages.DataStorage;
