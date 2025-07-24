@@ -8,9 +8,9 @@ import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.data.database.Database;
 import ru.waxera.beeLib.utils.data.database.DatabaseType;
 import ru.waxera.beeLib.utils.data.serialization.ObjectSerializer;
-import ru.waxera.beeLib.utils.data.serialization.Serializer;
 import ru.waxera.beeLib.utils.player.PlayerData;
 import ru.waxera.beeLib.utils.player.PlayerDataStorage;
+import ru.waxera.beeLib.utils.preferences.beeLibPrefs.BeeLibPreferencesKeys;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class LocalDataHandler {
     public LocalDataHandler(){
         database = new Database(DatabaseType.SQLITE, BeeLib.getInstance().getDataFolder().getAbsolutePath() +
                 "/database.db", null, null);
-        if(BeeLib.getInstance().getConfig().getBoolean("services.player-data-storage", true)) {
+        if((Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) {
             database.createTable("players_data",
                     "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                             "unique_id VARCHAR(36) NOT NULL UNIQUE, " +
@@ -44,7 +44,7 @@ public class LocalDataHandler {
     }
 
     public void savePlayerData(PlayerData playerData, boolean first){
-        if(!BeeLib.getInstance().getConfig().getBoolean("services.player-data-storage", true)) return;
+        if(!(Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) return;
         ObjectSerializer<List<String>> permSrz = new ObjectSerializer<>();
         if(first){
             Location last = playerData.getLocation();
@@ -111,6 +111,7 @@ public class LocalDataHandler {
     }
 
     public PlayerDataStorage getPlayerDataStorage(){
+        if(!(Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) return null;
         ArrayList<ArrayList<Object>> dataset = database.getDataObjects("*",
                 new String[]{"unique_id", "player_name", "display_name", "hp", "world_quit",
                         "x_quit", "y_quit", "z_quit", "world_respawn", "x_respawn", "y_respawn",
