@@ -2,7 +2,7 @@ package ru.waxera.beeLib.utils.data.database.object;
 
 import java.util.List;
 
-public abstract class DatabaseObject<T extends Enum<T> & DatabaseObjectVariables> {
+public abstract class DatabaseObject<T extends Enum<T>> {
     private List<T> updated;
     public boolean isUpdated(T variable){
         return updated.contains(variable);
