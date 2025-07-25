@@ -19,6 +19,7 @@ public abstract class DataHandler {
     public DataHandler(
             DatabaseType type,
             String connectionString,
+
             String user,
             String password
     ){

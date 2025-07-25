@@ -5,9 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import ru.waxera.beeLib.BeeLib;
-import ru.waxera.beeLib.utils.data.database.Database;
 import ru.waxera.beeLib.utils.data.database.DatabaseType;
-import ru.waxera.beeLib.utils.data.serialization.ObjectSerializer;
+import ru.waxera.beeLib.utils.data.serialization.Serializer;
 import ru.waxera.beeLib.utils.player.PlayerData;
 import ru.waxera.beeLib.utils.player.PlayerPool;
 import ru.waxera.beeLib.utils.preferences.beeLibPrefs.BeeLibPreferencesKeys;
@@ -44,7 +43,7 @@ public class BeeLibDataHandler extends DataHandler{
 
     public void savePlayerData(PlayerData playerData, boolean first){
         if(!(Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) return;
-        ObjectSerializer<List<String>> permSrz = new ObjectSerializer<>();
+        Serializer<List<String>> permSrz = new Serializer<>();
         if(first){
             Location last = playerData.getLocation();
             Location respawn = playerData.getRespawnLocation();
@@ -138,7 +137,7 @@ public class BeeLibDataHandler extends DataHandler{
                 boolean op = ((int) object.get(12) != 0);
                 long playerTime = (long) object.get(13);
                 String permissionsSerialized = (String) object.get(14);
-                List<String> permissionsDeserialized = (new ObjectSerializer<ArrayList<String>>()).deserialize(permissionsSerialized);
+                List<String> permissionsDeserialized = (new Serializer<ArrayList<String>>()).deserialize(permissionsSerialized);
 
                 PlayerData playerData = new PlayerData(
                         uuid,
