@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ru.waxera.beeLib.utils.Language;
 import ru.waxera.beeLib.utils.LanguageManager;
 import ru.waxera.beeLib.utils.data.pools.file.FileStorage;
-import ru.waxera.beeLib.utils.data.LocalDataHandler;
+import ru.waxera.beeLib.utils.data.BeeLibDataHandler;
 import ru.waxera.beeLib.utils.gui.container.ContainerInterfaceHandler;
 import ru.waxera.beeLib.utils.gui.hotbar.HotbarListener;
 import ru.waxera.beeLib.utils.gui.hotbar.RestoreHub;
@@ -22,7 +22,7 @@ public final class BeeLib extends JavaPlugin{
     private static HashMap<String, Boolean> softDeps = new HashMap<>();
     private static BeeLib instance;
     private static FileStorage holding;
-    private static LocalDataHandler dataHandler;
+    private static BeeLibDataHandler dataHandler;
     private static PlayerPool playerDataStorage = null;
     private static BeeLibPreferences preferences;
 
@@ -36,7 +36,7 @@ public final class BeeLib extends JavaPlugin{
         if((Boolean) preferences.get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)){
             playerDataStorage = dataHandler.getPlayerDataStorage();
         }
-        dataHandler = new LocalDataHandler();
+        dataHandler = new BeeLibDataHandler();
         new LanguageManager(instance, new Language[]{Language.ENGLISH, Language.RUSSIAN});
         checkDependecies();
         new RestoreHub();
@@ -79,7 +79,7 @@ public final class BeeLib extends JavaPlugin{
         return preferences;
     }
     public static FileStorage getHolding(){ return holding; }
-    public static LocalDataHandler getDataHandler(){
+    public static BeeLibDataHandler getDataHandler(){
         return dataHandler;
     }
     public static PlayerPool getPlayerDataStorage(){ return playerDataStorage; }

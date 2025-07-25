@@ -8,6 +8,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+/**
+ * A class for interacting with SQL databases through built-in methods.
+ *
+ * <p>
+ * This class describes only methods for directly simplifying interaction
+ * with the database, bypassing writing SQL queries. Some of the methods
+ * in this class may seem unoptimized or thoughtless, but the main purpose
+ * of their creation is to simplify interaction. There may be changes in the
+ * future to achieve greater optimization.
+ * </p>
+ *
+ * @version 1.0
+ * @since v1.0.0
+ * @author Salwarex
+ */
+
 public class Database {
     private final String url;
     private final String user;

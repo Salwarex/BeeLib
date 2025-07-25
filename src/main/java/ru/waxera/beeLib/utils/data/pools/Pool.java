@@ -16,7 +16,7 @@ package ru.waxera.beeLib.utils.data.pools;
  * @param <T> It is a class or interface of objects stored in the pool.
  *
  * @version 1.0
- * @since 1.3.1
+ * @since v1.3.1
  * @author Salwarex
  */
 

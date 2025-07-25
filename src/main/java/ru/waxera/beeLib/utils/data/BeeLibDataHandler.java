@@ -17,10 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class LocalDataHandler {
-    private static Database database;
-    public LocalDataHandler(){
-        database = new Database(DatabaseType.SQLITE, BeeLib.getInstance().getDataFolder().getAbsolutePath() +
+public class BeeLibDataHandler extends DataHandler{
+    public BeeLibDataHandler(){
+        super(DatabaseType.SQLITE, BeeLib.getInstance().getDataFolder().getAbsolutePath() +
                 "/database.db", null, null);
         if((Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) {
             database.createTable("players_data",
