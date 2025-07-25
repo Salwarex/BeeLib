@@ -1,11 +1,11 @@
 package ru.waxera.beeLib.utils.player;
 
-import ru.waxera.beeLib.utils.data.storages.map.IrreplaceableMapStorage;
+import ru.waxera.beeLib.utils.data.pools.map.IrreplaceableMapPool;
 
 import java.util.List;
 import java.util.UUID;
 
-public class PlayerDataStorage extends IrreplaceableMapStorage<UUID, PlayerData> {
+public class PlayerPool extends IrreplaceableMapPool<UUID, PlayerData> {
 
     @Override
     public void setDefaults(List<PlayerData> data) {

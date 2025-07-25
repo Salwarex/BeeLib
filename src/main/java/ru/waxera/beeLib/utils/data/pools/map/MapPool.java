@@ -1,12 +1,12 @@
-package ru.waxera.beeLib.utils.data.storages.map;
+package ru.waxera.beeLib.utils.data.pools.map;
 
-import ru.waxera.beeLib.utils.data.storages.DataStorage;
+import ru.waxera.beeLib.utils.data.pools.Pool;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class MapStorage<K, T> implements DataStorage<K, T> {
+public abstract class MapPool<K, T> implements Pool<K, T> {
     protected final Map<K, T> storage = new HashMap<>();
 
     public abstract void setDefaults(List<T> data);

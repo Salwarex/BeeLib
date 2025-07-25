@@ -10,7 +10,7 @@ import ru.waxera.beeLib.BeeLib;
 import java.util.UUID;
 
 public class PlayerDataListener implements Listener {
-    private final PlayerDataStorage storage = BeeLib.getPlayerDataStorage();
+    private final PlayerPool storage = BeeLib.getPlayerDataStorage();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){

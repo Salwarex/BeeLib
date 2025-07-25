@@ -1,7 +1,7 @@
 package ru.waxera.beeLib.utils;
 
 import org.bukkit.plugin.Plugin;
-import ru.waxera.beeLib.utils.data.storages.file.FileStorage;
+import ru.waxera.beeLib.utils.data.pools.file.FileStorage;
 import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.ArrayList;

@@ -5,14 +5,14 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.waxera.beeLib.utils.Language;
 import ru.waxera.beeLib.utils.LanguageManager;
-import ru.waxera.beeLib.utils.data.storages.file.FileStorage;
+import ru.waxera.beeLib.utils.data.pools.file.FileStorage;
 import ru.waxera.beeLib.utils.data.LocalDataHandler;
 import ru.waxera.beeLib.utils.gui.container.ContainerInterfaceHandler;
 import ru.waxera.beeLib.utils.gui.hotbar.HotbarListener;
 import ru.waxera.beeLib.utils.gui.hotbar.RestoreHub;
 import ru.waxera.beeLib.utils.gui.questionnaire.QuestionnaireHandler;
 import ru.waxera.beeLib.utils.player.PlayerDataListener;
-import ru.waxera.beeLib.utils.player.PlayerDataStorage;
+import ru.waxera.beeLib.utils.player.PlayerPool;
 import ru.waxera.beeLib.utils.preferences.beeLibPrefs.BeeLibPreferences;
 import ru.waxera.beeLib.utils.preferences.beeLibPrefs.BeeLibPreferencesKeys;
 
@@ -23,7 +23,7 @@ public final class BeeLib extends JavaPlugin{
     private static BeeLib instance;
     private static FileStorage holding;
     private static LocalDataHandler dataHandler;
-    private static PlayerDataStorage playerDataStorage = null;
+    private static PlayerPool playerDataStorage = null;
     private static BeeLibPreferences preferences;
 
     @Override
@@ -82,5 +82,5 @@ public final class BeeLib extends JavaPlugin{
     public static LocalDataHandler getDataHandler(){
         return dataHandler;
     }
-    public static PlayerDataStorage getPlayerDataStorage(){ return playerDataStorage; }
+    public static PlayerPool getPlayerDataStorage(){ return playerDataStorage; }
 }

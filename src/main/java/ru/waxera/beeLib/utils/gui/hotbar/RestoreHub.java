@@ -2,7 +2,7 @@ package ru.waxera.beeLib.utils.gui.hotbar;
 
 import org.bukkit.configuration.ConfigurationSection;
 import ru.waxera.beeLib.BeeLib;
-import ru.waxera.beeLib.utils.data.storages.file.FileStorage;
+import ru.waxera.beeLib.utils.data.pools.file.FileStorage;
 import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.HashMap;

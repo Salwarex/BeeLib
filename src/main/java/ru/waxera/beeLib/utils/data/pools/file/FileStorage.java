@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.utils.data.storages.file;
+package ru.waxera.beeLib.utils.data.pools.file;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

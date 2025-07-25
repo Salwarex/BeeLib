@@ -9,7 +9,7 @@ import ru.waxera.beeLib.utils.data.database.Database;
 import ru.waxera.beeLib.utils.data.database.DatabaseType;
 import ru.waxera.beeLib.utils.data.serialization.ObjectSerializer;
 import ru.waxera.beeLib.utils.player.PlayerData;
-import ru.waxera.beeLib.utils.player.PlayerDataStorage;
+import ru.waxera.beeLib.utils.player.PlayerPool;
 import ru.waxera.beeLib.utils.preferences.beeLibPrefs.BeeLibPreferencesKeys;
 
 import java.util.ArrayList;
@@ -110,7 +110,7 @@ public class LocalDataHandler {
 
     }
 
-    public PlayerDataStorage getPlayerDataStorage(){
+    public PlayerPool getPlayerDataStorage(){
         if(!(Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) return null;
         ArrayList<ArrayList<Object>> dataset = database.getDataObjects("*",
                 new String[]{"unique_id", "player_name", "display_name", "hp", "world_quit",
@@ -156,7 +156,7 @@ public class LocalDataHandler {
                 data.add(playerData);
             }
         }
-        PlayerDataStorage storage = new PlayerDataStorage();
+        PlayerPool storage = new PlayerPool();
         storage.setDefaults(data);
 
         return storage;

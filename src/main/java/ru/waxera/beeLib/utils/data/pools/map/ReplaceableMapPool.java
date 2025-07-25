@@ -1,8 +1,8 @@
-package ru.waxera.beeLib.utils.data.storages.map;
+package ru.waxera.beeLib.utils.data.pools.map;
 
-import ru.waxera.beeLib.utils.data.storages.DataStorage;
+import ru.waxera.beeLib.utils.data.pools.Pool;
 
-public abstract class ReplaceableMapStorage<K, T> extends MapStorage<K, T> implements DataStorage<K, T> {
+public abstract class ReplaceableMapPool<K, T> extends MapPool<K, T> implements Pool<K, T> {
 
     @Override
     public void add(K key, T element){
