@@ -10,4 +10,7 @@ public abstract class DatabaseObject<T extends Enum<T>> {
     protected void setUpdated(T variable){
         updated.add(variable);
     }
+    public void clearUpdated(){
+        updated.clear();
+    }
 }
