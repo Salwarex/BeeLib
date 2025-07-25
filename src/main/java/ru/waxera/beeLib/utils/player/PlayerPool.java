@@ -3,6 +3,7 @@ package ru.waxera.beeLib.utils.player;
 import ru.waxera.beeLib.utils.data.pools.map.IrreplaceableMapPool;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class PlayerPool extends IrreplaceableMapPool<UUID, PlayerData> {
