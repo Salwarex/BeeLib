@@ -1,16 +1,16 @@
-package ru.waxera.beeLib.utils.data.database;
+package ru.waxera.beeLib.utils.data.database.object;
 
 import java.util.List;
 
-public abstract class DatabaseObject<T extends Enum<T>> {
+public abstract class DatabaseObject<T extends Enum<T> & DatabaseObjectVariables> {
     private List<T> updated;
     public boolean isUpdated(T variable){
         return updated.contains(variable);
     }
     protected void setUpdated(T variable){
-        updated.add(variable);
+        this.updated.add(variable);
     }
     public void clearUpdated(){
-        updated.clear();
+        this.updated.clear();
     }
 }
