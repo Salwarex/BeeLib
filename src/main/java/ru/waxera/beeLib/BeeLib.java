@@ -28,14 +28,14 @@ public final class BeeLib extends JavaPlugin{
     public void onEnable(){
         instance = this;
         saveDefaultConfig();
-        preferences = new BeeLibPreferences(this.getConfig());
+        new LanguageManager(instance, new Language[]{Language.ENGLISH, Language.RUSSIAN});
 
+        preferences = new BeeLibPreferences(this.getConfig());
         holding = new FileStorage("holding.yml", "hotbar-interface", BeeLib.getInstance());
         dataHandler = new BeeLibDataHandler();
         if((Boolean) preferences.get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)){
             dataHandler.initPlayerPool();
         }
-        new LanguageManager(instance, new Language[]{Language.ENGLISH, Language.RUSSIAN});
         checkDependecies();
         new RestoreHub();
 

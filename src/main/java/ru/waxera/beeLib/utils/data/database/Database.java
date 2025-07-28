@@ -1,5 +1,6 @@
 package ru.waxera.beeLib.utils.data.database;
 
+import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.data.database.query.QueryWherePair;
 import ru.waxera.beeLib.utils.message.Message;
 
@@ -164,14 +165,11 @@ public class Database {
                            QueryWherePair ... queryWherePairs){
         new_data = prepareData(new_data);
         //ArrayList<Object> objects;
-        StringBuilder sql = new StringBuilder("UPDATE " + table_name + " SET " + update_column + " = ?" + (queryWherePairs != null ? " WHERE " : ""));
-        if(queryWherePairs != null) {
-            //objects = prepareData(new ArrayList<>(where_info.values()));
-            int i = 0;
-            for(QueryWherePair pair : queryWherePairs){
-                sql.append(pair.toString()).append((i == queryWherePairs.length - 1) ? ";" : "");
-                i++;
-            }
+        StringBuilder sql = new StringBuilder("UPDATE " + table_name + " SET " + update_column + " = ?" + (queryWherePairs.length > 0 ? " WHERE " : ""));
+        int i = 0;
+        for(QueryWherePair pair : queryWherePairs){
+            sql.append(pair.toString()).append((i == queryWherePairs.length - 1) ? ";" : "");
+            i++;
         }
         //else objects = new ArrayList<>();
 
@@ -179,12 +177,10 @@ public class Database {
             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())){
             preparedStatement.setObject(1, new_data);
             int index = 2;
-            if(queryWherePairs != null){
-                for (QueryWherePair pair : queryWherePairs) {
-                    Object value = pair.getValue();
-                    preparedStatement.setObject(index, value);
-                    index++;
-                }
+            for (QueryWherePair pair : queryWherePairs) {
+                Object value = pair.getValue();
+                preparedStatement.setObject(index, value);
+                index++;
             }
             preparedStatement.executeUpdate();
         }
@@ -197,23 +193,19 @@ public class Database {
                           String table_name,
                           QueryWherePair ... queryWherePairs){
         //ArrayList<Object> objects = prepareData(new ArrayList<>(where_info.values()));
-        StringBuilder sql = new StringBuilder("SELECT " + column_name + " FROM " + table_name + (queryWherePairs != null ? " WHERE " : ""));
+        StringBuilder sql = new StringBuilder("SELECT " + column_name + " FROM " + table_name + (queryWherePairs.length > 0 ? " WHERE " : ""));
         int i = 0;
-        if(queryWherePairs != null){
-            for(QueryWherePair pair : queryWherePairs){
-                sql.append(pair.toString()).append((i == queryWherePairs.length - 1) ? ";" : "");
-                i++;
-            }
+        for (QueryWherePair pair : queryWherePairs) {
+            sql.append(pair.toString()).append((i == queryWherePairs.length - 1) ? ";" : "");
+            i++;
         }
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())){
             int index = 1;
-            if(queryWherePairs != null){
-                for(QueryWherePair pair : queryWherePairs){
-                    Object value = pair.getValue();
-                    preparedStatement.setObject(index, value);
-                    index++;
-                }
+            for (QueryWherePair pair : queryWherePairs) {
+                Object value = pair.getValue();
+                preparedStatement.setObject(index, value);
+                index++;
             }
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
@@ -232,20 +224,22 @@ public class Database {
         ArrayList<ArrayList<Object>> result = new ArrayList<>();
 
         //ArrayList<Object> objects = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT " + select_modifier + " FROM " + table_name + (queryWherePairs != null ? " WHERE " : ""));
-        if(queryWherePairs != null){
-            //objects = prepareData(new ArrayList<>(where_info.values()));
-            int i = 0;
-            for(QueryWherePair pair : queryWherePairs){
+        StringBuilder sql = new StringBuilder("SELECT " + select_modifier + " FROM " + table_name + (queryWherePairs.length > 0 ? " WHERE " : ""));
+        int i = 0;
+        for(QueryWherePair pair : queryWherePairs){
+            if(pair != null){
                 sql.append(pair.toString()).append((i == queryWherePairs.length - 1) ? ";" : "");
                 i++;
             }
         }
+
+        Message.send(null, sql.toString()); //LOG
+
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())){
             int index = 1;
-            if(queryWherePairs != null){
-                for(QueryWherePair pair : queryWherePairs){
+            for (QueryWherePair pair : queryWherePairs) {
+                if (pair != null) {
                     Object value = pair.getValue();
                     preparedStatement.setObject(index, value);
                     index++;
@@ -268,25 +262,20 @@ public class Database {
     }
 
     public int count(String table_name, QueryWherePair ... queryWherePairs){
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM " + table_name + (queryWherePairs != null ? " WHERE " : ""));
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM " + table_name + (queryWherePairs.length > 0 ? " WHERE " : ""));
         //ArrayList<Object> objects = new ArrayList<>();
-        if(queryWherePairs != null){
-            //objects = prepareData(new ArrayList<>(where_info.values()));
-            int i = 0;
-            for(QueryWherePair pair : queryWherePairs){
-                sql.append(pair.toString()).append((i == queryWherePairs.length - 1) ? ";" : "");
-                i++;
-            }
+        int i = 0;
+        for(QueryWherePair pair : queryWherePairs){
+            sql.append(pair.toString()).append((i == queryWherePairs.length - 1) ? ";" : "");
+            i++;
         }
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())){
             int index = 1;
-            if(queryWherePairs != null){
-                for(QueryWherePair pair : queryWherePairs){
-                    Object value = pair.getValue();
-                    preparedStatement.setObject(index, value);
-                    index++;
-                }
+            for (QueryWherePair pair : queryWherePairs) {
+                Object value = pair.getValue();
+                preparedStatement.setObject(index, value);
+                index++;
             }
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){

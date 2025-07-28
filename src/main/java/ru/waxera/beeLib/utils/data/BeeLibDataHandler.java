@@ -114,7 +114,7 @@ public class BeeLibDataHandler extends DataHandler{
                 new String[]{"unique_id", "player_name", "display_name", "hp", "world_quit",
                         "x_quit", "y_quit", "z_quit", "world_respawn", "x_respawn", "y_respawn",
                         "z_respawn", "op", "player_time", "permission"},
-                "players_data", null, null);
+                "players_data");
 
         List<PlayerData> data = new ArrayList<>();
 
