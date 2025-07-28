@@ -2,6 +2,7 @@ package ru.waxera.beeLib.utils.interfaces.questionnaire;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 
@@ -10,7 +11,7 @@ import java.util.HashMap;
 public class QuestionnaireHandler implements Listener {
     private static HashMap<Player, Questionnaire> list = new HashMap<>();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(PlayerChatEvent e){
         Player player = e.getPlayer();
         if(contains(player)){

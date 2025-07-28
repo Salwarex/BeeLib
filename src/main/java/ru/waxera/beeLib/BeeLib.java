@@ -25,12 +25,13 @@ public final class BeeLib extends JavaPlugin{
         new LanguageManager(instance, new Language[]{Language.ENGLISH, Language.RUSSIAN});
         checkDependecies();
         new RestoreHub();
+
+        Bukkit.getPluginManager().registerEvents(new ContainerInterfaceHandler(), this);
+        Bukkit.getPluginManager().registerEvents(new QuestionnaireHandler(), this);
+        Bukkit.getPluginManager().registerEvents(new HotbarListener(), this);
     }
 
     public static void setPlugin(final JavaPlugin plugin, Language[] languages){
-        Bukkit.getPluginManager().registerEvents(new ContainerInterfaceHandler(), plugin);
-        Bukkit.getPluginManager().registerEvents(new QuestionnaireHandler(), plugin);
-        Bukkit.getPluginManager().registerEvents(new HotbarListener(), plugin);
         new LanguageManager(plugin, languages);
     }
 
