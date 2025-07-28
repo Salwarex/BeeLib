@@ -17,9 +17,9 @@ public class HotbarListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e){
         Player player = e.getPlayer();
-        if(!HotbarInterfaceOpenedList.contains(player)) return;
+        if(!HotbarInterfaceOpenedPool.getInstance().contains(player)) return;
         e.setCancelled(true);
-        HotbarInterface hotbarInterface = HotbarInterfaceOpenedList.get(player);
+        HotbarInterface hotbarInterface = HotbarInterfaceOpenedPool.getInstance().get(player);
         int i = getSlot(e.getItem(), player);
         if(i < 0 || i > 8) return;
         hotbarInterface.execute(i, e);
@@ -28,9 +28,9 @@ public class HotbarListener implements Listener {
     @EventHandler
     public void onBlock(BlockPlaceEvent e){
         Player player = e.getPlayer();
-        if(!HotbarInterfaceOpenedList.contains(player)) return;
+        if(!HotbarInterfaceOpenedPool.getInstance().contains(player)) return;
         e.setCancelled(true);
-        HotbarInterface hotbarInterface = HotbarInterfaceOpenedList.get(player);
+        HotbarInterface hotbarInterface = HotbarInterfaceOpenedPool.getInstance().get(player);
         int i = getSlot(e.getItemInHand(), player);
         if(i < 0 || i > 8) return;
         hotbarInterface.execute(i, e);
@@ -50,21 +50,21 @@ public class HotbarListener implements Listener {
     @EventHandler
     public void onDrop(PlayerDropItemEvent e){
         Player player = e.getPlayer();
-        if(!HotbarInterfaceOpenedList.contains(player)) return;
+        if(!HotbarInterfaceOpenedPool.getInstance().contains(player)) return;
         e.setCancelled(true);
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e){
         Player player = e.getPlayer();
-        if(!HotbarInterfaceOpenedList.contains(player)) return;
+        if(!HotbarInterfaceOpenedPool.getInstance().contains(player)) return;
         e.setCancelled(true);
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent e){
         Player player = (Player) e.getWhoClicked();
-        if(!HotbarInterfaceOpenedList.contains(player)) return;
+        if(!HotbarInterfaceOpenedPool.getInstance().contains(player)) return;
         e.setCancelled(true);
     }
 

@@ -8,6 +8,15 @@ import ru.waxera.beeLib.utils.message.Message;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * A storage of information about items that HotbarInterface
+ * has hidden for the duration of its action.
+ *
+ * @version 1
+ * @since v1.2.4
+ * @author Salwarex
+ */
+
 public class RestoreHub {
     private static FileStorage holding = BeeLib.getHolding();
     private static HashMap<String, HoldingItems> list = new HashMap<>();

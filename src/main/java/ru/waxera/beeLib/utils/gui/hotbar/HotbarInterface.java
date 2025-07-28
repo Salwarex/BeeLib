@@ -7,6 +7,14 @@ import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.utils.gui.Slot;
 import ru.waxera.beeLib.utils.message.Message;
 
+/**
+ * Implementation of a graphical user interface (GUI) for interaction
+ * between server players and a BeeLib-dependent plugin using HotBar item's bar.
+ *
+ * @version 1
+ * @since v1.1.1
+ * @author Salwarex
+ */
 
 public class HotbarInterface {
     private final Player holder;
@@ -28,12 +36,12 @@ public class HotbarInterface {
         for(int i = 0; i < 9; i++){
             inventory.setItem(i, slots[i].getItemStack());
         }
-        HotbarInterfaceOpenedList.put(holder, this);
+        HotbarInterfaceOpenedPool.getInstance().add(holder, this);
     }
 
     public void close(){
         holdingItems.restore();
-        HotbarInterfaceOpenedList.remove(holder);
+        HotbarInterfaceOpenedPool.getInstance().remove(holder);
     }
 
     public void execute(int index, Event e){

@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.BeeLib;
-import ru.waxera.beeLib.utils.StringUtils;
+import ru.waxera.beeLib.utils.specials.string.StringUtils;
 
 import java.util.ArrayList;
 

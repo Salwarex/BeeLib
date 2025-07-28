@@ -10,8 +10,8 @@ import ru.waxera.beeLib.utils.data.pools.Pool;
  *
  * @see Pool Pool Interface
  * @see MapPool
- * @version 1.0
- * @since v1.3.1
+ * @version 1
+ * @since v1.4
  * @author Salwarex
  */
 

@@ -10,8 +10,8 @@ import java.util.Map;
  * An implementation of the Pool interface based on the use of the Map collection.
  *
  * @see Pool Pool Interface
- * @version 1.0
- * @since v1.3.1
+ * @version 1
+ * @since v1.4
  * @author Salwarex
  */
 

@@ -1,8 +1,9 @@
-package ru.waxera.beeLib.utils;
+package ru.waxera.beeLib.utils.specials.string;
 
 import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.data.pools.file.FileStorage;
+import ru.waxera.beeLib.utils.specials.language.LanguageManager;
 
 import java.util.ArrayList;
 import java.util.List;

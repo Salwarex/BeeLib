@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.data.database.DatabaseType;
+import ru.waxera.beeLib.utils.data.database.query.QueryWherePair;
 import ru.waxera.beeLib.utils.data.serialization.Serializer;
 import ru.waxera.beeLib.utils.player.PlayerData;
 import ru.waxera.beeLib.utils.player.PlayerPool;
@@ -57,59 +58,58 @@ public class BeeLibDataHandler extends DataHandler{
         else{
             Player player = playerData.getPlayer();
             if(player == null) return;
-            HashMap<String, Object> where = new HashMap<>();
-            where.put("uuid", player.getUniqueId());
+            QueryWherePair where = new QueryWherePair(null, "uuid", player.getUniqueId());
 
             if(!playerData.getSavedDisplayName().equalsIgnoreCase(playerData.getDisplayName())){
                 database.updateData("players_data",
-                        "display_name", player.getDisplayName(), where, new boolean[]{true});
+                        "display_name", player.getDisplayName(), where);
                 playerData.setDisplayName(player.getDisplayName());
             }
             if(playerData.getSavedHealthScale() != player.getHealthScale()){
                 database.updateData("players_data",
-                        "hp", player.getHealthScale(), where, new boolean[]{true});
+                        "hp", player.getHealthScale(), where);
                 playerData.setHp(player.getHealthScale());
             }
             if(!playerData.getSavedLocation().equals(player.getLocation())){
                 Location loc = player.getLocation();
                 database.updateData("players_data",
-                        "world_quit", loc.getWorld().getName(), where, new boolean[]{true});
+                        "world_quit", loc.getWorld().getName(), where);
                 database.updateData("players_data",
-                        "x_quit", loc.getBlockX(), where, new boolean[]{true});
+                        "x_quit", loc.getBlockX(), where);
                 database.updateData("players_data",
-                        "y_quit", loc.getBlockY(), where, new boolean[]{true});
+                        "y_quit", loc.getBlockY(), where);
                 database.updateData("players_data",
-                        "z_quit", loc.getBlockZ(), where, new boolean[]{true});
+                        "z_quit", loc.getBlockZ(), where);
                 playerData.setLocation(loc);
             }
             if(!playerData.getSavedRespawnLocation().equals(player.getRespawnLocation())){
                 Location loc = player.getRespawnLocation();
                 database.updateData("players_data",
-                        "world_respawn", loc.getWorld().getName(), where, new boolean[]{true});
+                        "world_respawn", loc.getWorld().getName(), where);
                 database.updateData("players_data",
-                        "x_respawn", loc.getBlockX(), where, new boolean[]{true});
+                        "x_respawn", loc.getBlockX(), where);
                 database.updateData("players_data",
-                        "y_respawn", loc.getBlockY(), where, new boolean[]{true});
+                        "y_respawn", loc.getBlockY(), where);
                 database.updateData("players_data",
-                        "z_respawn", loc.getBlockZ(), where, new boolean[]{true});
+                        "z_respawn", loc.getBlockZ(), where);
                 playerData.setRespawnLocation(loc);
             }
             if(playerData.isSavedOp() != player.isOp()){
                 database.updateData("players_data",
-                        "op", (player.isOp() ? 1 : 0), where, new boolean[]{true});
+                        "op", (player.isOp() ? 1 : 0), where);
                 playerData.setOp(player.isOp());
             }
             if(playerData.equalsPermissions(player.getEffectivePermissions())){
                 database.updateData("players_data",
-                        "permission", permSrz.serialize(playerData.getSavedPermissions()), where, new boolean[]{true});
+                        "permission", permSrz.serialize(playerData.getSavedPermissions()), where);
                 playerData.setPermissions(player.getEffectivePermissions());
             }
         }
 
     }
 
-    public PlayerPool getPlayerDataStorage(){
-        if(!(Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) return null;
+    public void initPlayerPool(){
+        if(!(Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) return;
         ArrayList<ArrayList<Object>> dataset = database.getDataObjects("*",
                 new String[]{"unique_id", "player_name", "display_name", "hp", "world_quit",
                         "x_quit", "y_quit", "z_quit", "world_respawn", "x_respawn", "y_respawn",
@@ -154,9 +154,7 @@ public class BeeLibDataHandler extends DataHandler{
                 data.add(playerData);
             }
         }
-        PlayerPool storage = new PlayerPool();
-        storage.setDefaults(data);
 
-        return storage;
+        PlayerPool.getInstance().setDefaults(data);
     }
 }

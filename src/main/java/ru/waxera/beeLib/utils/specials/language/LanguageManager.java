@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.utils;
+package ru.waxera.beeLib.utils.specials.language;
 
 import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.utils.data.pools.file.FileStorage;

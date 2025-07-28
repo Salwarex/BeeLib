@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.utils;
+package ru.waxera.beeLib.utils.specials.items;
 
 
 import de.tr7zw.nbtapi.NBTItem;
@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.message.Message;
+import ru.waxera.beeLib.utils.specials.string.StringUtils;
 
 import java.util.ArrayList;
 

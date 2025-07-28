@@ -9,19 +9,19 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 public class ContainerInterfaceHandler implements Listener {
 
     @EventHandler
-    public void itemClick(InventoryClickEvent e){ //IOL
+    public void itemClick(InventoryClickEvent e){
         if(e.getCurrentItem() == null) return;
 
         Player player = (Player) e.getWhoClicked();
-        ContainerInterface containerInterface = InterfaceOpenedList.get(player);
+        ContainerInterface containerInterface = InterfaceOpenedPool.getInstance().get(player);
         if(containerInterface == null) return;
         if(!containerInterface.isDefaultInterfaceHandler()) return;
         containerInterface.playerClickAction(e);
     }
 
     @EventHandler
-    public void closeInventory(InventoryCloseEvent e){ //IOL
+    public void closeInventory(InventoryCloseEvent e){
         Player player = (Player) e.getPlayer();
-        if(InterfaceOpenedList.contains(player)) InterfaceOpenedList.remove(player);
+        if(InterfaceOpenedPool.getInstance().contains(player)) InterfaceOpenedPool.getInstance().remove(player);
     }
 }

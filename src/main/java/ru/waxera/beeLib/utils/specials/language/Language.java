@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.utils;
+package ru.waxera.beeLib.utils.specials.language;
 
 public enum Language {
     RUSSIAN("ru-RU"),

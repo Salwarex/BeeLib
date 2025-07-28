@@ -3,16 +3,15 @@ package ru.waxera.beeLib;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.waxera.beeLib.utils.Language;
-import ru.waxera.beeLib.utils.LanguageManager;
+import ru.waxera.beeLib.utils.specials.language.Language;
+import ru.waxera.beeLib.utils.specials.language.LanguageManager;
 import ru.waxera.beeLib.utils.data.pools.file.FileStorage;
 import ru.waxera.beeLib.utils.data.BeeLibDataHandler;
 import ru.waxera.beeLib.utils.gui.container.ContainerInterfaceHandler;
 import ru.waxera.beeLib.utils.gui.hotbar.HotbarListener;
 import ru.waxera.beeLib.utils.gui.hotbar.RestoreHub;
-import ru.waxera.beeLib.utils.gui.questionnaire.QuestionnaireHandler;
+import ru.waxera.beeLib.utils.gui.questionnaire.QuestionnaireListener;
 import ru.waxera.beeLib.utils.player.PlayerDataListener;
-import ru.waxera.beeLib.utils.player.PlayerPool;
 import ru.waxera.beeLib.utils.preferences.beeLibPrefs.BeeLibPreferences;
 import ru.waxera.beeLib.utils.preferences.beeLibPrefs.BeeLibPreferencesKeys;
 
@@ -23,7 +22,6 @@ public final class BeeLib extends JavaPlugin{
     private static BeeLib instance;
     private static FileStorage holding;
     private static BeeLibDataHandler dataHandler;
-    private static PlayerPool playerDataStorage = null;
     private static BeeLibPreferences preferences;
 
     @Override
@@ -33,10 +31,10 @@ public final class BeeLib extends JavaPlugin{
         preferences = new BeeLibPreferences(this.getConfig());
 
         holding = new FileStorage("holding.yml", "hotbar-interface", BeeLib.getInstance());
-        if((Boolean) preferences.get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)){
-            playerDataStorage = dataHandler.getPlayerDataStorage();
-        }
         dataHandler = new BeeLibDataHandler();
+        if((Boolean) preferences.get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)){
+            dataHandler.initPlayerPool();
+        }
         new LanguageManager(instance, new Language[]{Language.ENGLISH, Language.RUSSIAN});
         checkDependecies();
         new RestoreHub();
@@ -46,7 +44,7 @@ public final class BeeLib extends JavaPlugin{
 
     private void registerEvents(){
         Bukkit.getPluginManager().registerEvents(new ContainerInterfaceHandler(), this);
-        Bukkit.getPluginManager().registerEvents(new QuestionnaireHandler(), this);
+        Bukkit.getPluginManager().registerEvents(new QuestionnaireListener(), this);
         Bukkit.getPluginManager().registerEvents(new HotbarListener(), this);
         if((Boolean) preferences.get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)){
             Bukkit.getPluginManager().registerEvents(new PlayerDataListener(), this);
@@ -54,9 +52,6 @@ public final class BeeLib extends JavaPlugin{
     }
 
     public static void setPlugin(final JavaPlugin plugin, Language[] languages){
-//        Bukkit.getPluginManager().registerEvents(new ContainerInterfaceHandler(), plugin);
-//        Bukkit.getPluginManager().registerEvents(new QuestionnaireHandler(), plugin);
-//        Bukkit.getPluginManager().registerEvents(new HotbarListener(), plugin);
         new LanguageManager(plugin, languages);
     }
 
@@ -82,5 +77,4 @@ public final class BeeLib extends JavaPlugin{
     public static BeeLibDataHandler getDataHandler(){
         return dataHandler;
     }
-    public static PlayerPool getPlayerDataStorage(){ return playerDataStorage; }
 }

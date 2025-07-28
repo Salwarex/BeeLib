@@ -10,8 +10,8 @@ import ru.waxera.beeLib.utils.data.database.DatabaseType;
  * @see Database
  * @see DatabaseType
  * @author Salwarex
- * @version 1.0
- * @since v1.3.1
+ * @version 1
+ * @since v1.4
  */
 
 public abstract class DataHandler {

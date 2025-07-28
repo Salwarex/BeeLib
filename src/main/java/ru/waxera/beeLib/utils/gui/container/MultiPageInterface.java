@@ -11,6 +11,15 @@ import ru.waxera.beeLib.utils.message.Message;
 import java.util.Collections;
 import java.util.HashMap;
 
+/**
+ * The implementation of {@link ContainerInterface}, which allows you to include
+ * an unlimited number of objects, dividing the interface itself into several pages.
+ *
+ * @version 1
+ * @since v1.0
+ * @author Salwarex
+ */
+
 public class MultiPageInterface extends ContainerInterface {
     private HashMap<Integer, Slot> content = new HashMap<>();
     private HashMap<Integer, Slot> multipage_content = new HashMap<>();
@@ -94,7 +103,7 @@ public class MultiPageInterface extends ContainerInterface {
             }
         }
         player.openInventory(this.inventory);
-        InterfaceOpenedList.put(player, this);
+        InterfaceOpenedPool.getInstance().add(player, this);
     }
 
     @Override

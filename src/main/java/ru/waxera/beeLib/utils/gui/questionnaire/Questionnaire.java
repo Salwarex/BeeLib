@@ -10,26 +10,35 @@ import ru.waxera.beeLib.utils.message.Message;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Implementation of a user interface (UI) for interaction
+ * between server players and a BeeLib-dependent plugin using chat-system.
+ *
+ * @version 1
+ * @since v1.2
+ * @author Salwarex
+ */
+
 public class Questionnaire {
     private Player player;
     private HashMap<String, Question> questions = new HashMap<>();
     private Action action;
     private final Plugin plugin;
-    private int actual_question = 0;
-    private Sound question_sound = null;
-    private String stop_word;
+    private int actualQuestion = 0;
+    private Sound questionSound = null;
+    private String stopWord;
 
     public Questionnaire(Plugin plugin,
                          Player player,
                          Action action,
-                         Sound question_sound,
-                         String stop_word,
+                         Sound questionSound,
+                         String stopWord,
                          Question ... questions){
         this.plugin = plugin;
         this.player = player;
         this.action = action;
-        this.question_sound = question_sound;
-        this.stop_word = stop_word;
+        this.questionSound = questionSound;
+        this.stopWord = stopWord;
         for(Question question : questions){
             this.questions.put(question.getVariable(), question);
         }
@@ -37,39 +46,39 @@ public class Questionnaire {
     }
 
     public boolean isOver(){
-        return actual_question >= questions.keySet().size();
+        return actualQuestion >= questions.keySet().size();
     }
 
     private Question getActualQuestion(){
         if(isOver()) { Message.error(BeeLib.getInstance(),
                 "Questionnaire error: The questions are over!"); return null; }
         ArrayList<String> keys = new ArrayList<>(questions.keySet());
-        String now_key = keys.get(actual_question);
+        String now_key = keys.get(actualQuestion);
         return this.questions.get(now_key);
     }
 
     private void sendQuestion(){
-        if(!QuestionnaireHandler.contains(player)){
+        if(!QuestionnairePool.getInstance().contains(player)){
             Message.send(this.plugin, player, "@qsnr-announce@");
-            QuestionnaireHandler.add(player, this);
+            QuestionnairePool.getInstance().add(player, this);
         }
         if(isOver()){
             endQuestionnaire(false);
             return;
         }
-        if(question_sound != null) player.playSound(player.getLocation(), question_sound, 1, 1);
+        if(questionSound != null) player.playSound(player.getLocation(), questionSound, 1, 1);
         Question question = getActualQuestion();
         Message.send(BeeLib.getInstance(), player, question.getQuestion());
     }
 
     public void endQuestionnaire(boolean force){
         if(!force) action.run(player, null);
-        QuestionnaireHandler.remove(player);
+        QuestionnairePool.getInstance().remove(player);
     }
 
     public void setAnswer(String answer){
-        if(stop_word != null){
-            if(answer.equalsIgnoreCase(stop_word)) {
+        if(stopWord != null){
+            if(answer.equalsIgnoreCase(stopWord)) {
                 Message.send(this.plugin, player, "@qsnr-stop-word@");
                 endQuestionnaire(true); return;
             }
@@ -81,7 +90,7 @@ public class Questionnaire {
             return;
         }
         question.setAnswer(answer);
-        actual_question += 1;
+        actualQuestion += 1;
         sendQuestion();
     }
 
