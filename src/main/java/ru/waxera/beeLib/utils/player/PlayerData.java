@@ -7,6 +7,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import ru.waxera.beeLib.BeeLib;
 import ru.waxera.beeLib.utils.message.Message;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,9 @@ public class PlayerData {
     private Location respawnLocation;
     private boolean op;
     private long playerTime;
+    private LocalDateTime firstSession;
+    private LocalDateTime lastSession;
+
 
     private List<String> permissions;
 
@@ -33,7 +37,9 @@ public class PlayerData {
                       Location respawnLocation,
                       boolean op,
                       long playerTime,
-                      List<String> permissions){
+                      List<String> permissions,
+                      LocalDateTime firstSession,
+                      LocalDateTime lastSession){
         this.uuid = uuid;
         this.name = playerName;
         this.displayName = displayName;
@@ -43,6 +49,8 @@ public class PlayerData {
         this.op = op;
         this.playerTime = playerTime;
         this.permissions = permissions;
+        this.firstSession = firstSession;
+        this.lastSession = lastSession;
     }
     public PlayerData(Player player){
         if(player == null) {
@@ -60,6 +68,8 @@ public class PlayerData {
         this.op = player.isOp();
         this.playerTime = player.getPlayerTime();
         this.permissions = permissionsSet(player.getEffectivePermissions());
+        this.firstSession = LocalDateTime.now();
+        this.lastSession = LocalDateTime.now();
     }
 
     public UUID getUniqueId() {
@@ -138,6 +148,21 @@ public class PlayerData {
         return permissions;
     }
 
+    public LocalDateTime getFirstSession() {
+        return firstSession;
+    }
+
+    public LocalDateTime getLastSession() {
+        return lastSession;
+    }
+
+    public void updateLastSession(){
+        this.lastSession = LocalDateTime.now();
+    }
+
+    public void setPlayer(Player player){
+        this.player = player;
+    }
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
@@ -168,10 +193,6 @@ public class PlayerData {
     }
 
     public void save(){
-        if(player == null){
-            Message.error(null, "The plugin cannot update the player's data because it has not been found!");
-            return;
-        }
         BeeLib.getDataHandler().savePlayerData(this, false);
     }
 

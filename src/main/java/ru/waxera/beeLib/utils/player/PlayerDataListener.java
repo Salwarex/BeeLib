@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ru.waxera.beeLib.BeeLib;
+import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.UUID;
 
@@ -33,6 +34,9 @@ public class PlayerDataListener implements Listener {
             data = new PlayerData(player);
             this.storage.add(uuid, data);
             BeeLib.getDataHandler().savePlayerData(data, true);
+        }
+        else{
+            data.updateLastSession();
         }
         return data;
     }

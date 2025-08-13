@@ -97,8 +97,10 @@ public class Database {
             for (int i = 0; i < attributes.split(", ").length; i++) { valuesPaster.append("?, "); }
             valuesPaster.setLength(valuesPaster.length() - 2);
 
+            String sql = "INSERT INTO " + table_name + " (" + attributes + ") VALUES (" + valuesPaster + ");";
+
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + table_name + " (" + attributes + ") VALUES (" + valuesPaster + ");")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 int i = 1;
                 for (Object obj : values) {
                     preparedStatement.setObject(i, obj);
@@ -121,6 +123,7 @@ public class Database {
                 preparedStatement.setObject(i, obj);
                 i++;
             }
+            System.out.println("execute insert...");
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -232,8 +235,6 @@ public class Database {
                 i++;
             }
         }
-
-        Message.send(null, sql.toString()); //LOG
 
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())){

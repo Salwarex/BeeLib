@@ -12,12 +12,21 @@ import ru.waxera.beeLib.utils.player.PlayerData;
 import ru.waxera.beeLib.utils.player.PlayerPool;
 import ru.waxera.beeLib.utils.preferences.beeLibPrefs.BeeLibPreferencesKeys;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 public class BeeLibDataHandler extends DataHandler{
+
+    private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+
     public BeeLibDataHandler(){
         super(DatabaseType.SQLITE, BeeLib.getInstance().getDataFolder().getAbsolutePath() +
                 "/database.db", null, null);
@@ -37,7 +46,9 @@ public class BeeLibDataHandler extends DataHandler{
                             "y_respawn INTEGER, " +
                             "z_respawn INTEGER, " +
                             "op INTEGER DEFAULT 0, " +
-                            "player_time INTEGER DEFAULT 0," +
+                            "player_time INTEGER DEFAULT 0, " +
+                            "first_session TEXT NOT NULL, " +
+                            "last_session TEXT NOT NULL, " +
                             "permission TEXT");
         }
     }
@@ -45,20 +56,33 @@ public class BeeLibDataHandler extends DataHandler{
     public void savePlayerData(PlayerData playerData, boolean first){
         if(!(Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) return;
         Serializer<List<String>> permSrz = new Serializer<>();
+        LocalDateTime now = LocalDateTime.now();
+        String date = DATE_FORMATTER.format(now);
+
         if(first){
             Location last = playerData.getLocation();
             Location respawn = playerData.getRespawnLocation();
 
-            database.insert("players_data", "unique_id, player_name, display_name, hp, world_quit," +
-                            "x_quit, y_quit, z_quit, world_respawn, x_respawn, y_respawn, z_respawn, permission",
-                    playerData.getUniqueId(), playerData.getName(), playerData.getHealthScale(),
-                    last.getWorld(), last.getBlockX(), last.getBlockY(), last.getBlockZ(), respawn.getWorld(),
-                    respawn.getBlockX(), respawn.getBlockY(), respawn.getBlockZ(), permSrz.serialize(playerData.getSavedPermissions()));
+            if (respawn == null) respawn = last.getWorld().getSpawnLocation();
+
+            System.out.println("registering new player data...");
+
+            database.insert("players_data", "unique_id, player_name, display_name, hp, world_quit, " +
+                            "x_quit, y_quit, z_quit, world_respawn, x_respawn, y_respawn, z_respawn, op, first_session, last_session, permission",
+                    playerData.getUniqueId(), playerData.getName(), playerData.getDisplayName(), playerData.getHealthScale(),
+                    last.getWorld().toString(), last.getBlockX(), last.getBlockY(), last.getBlockZ(), respawn.getWorld().getName(),
+                    respawn.getBlockX(), respawn.getBlockY(), respawn.getBlockZ(), playerData.isOp() ? 1 : 0, date, date,
+                    permSrz.serialize(playerData.getSavedPermissions()));
         }
         else{
+            System.out.println("saving player data...");
+
             Player player = playerData.getPlayer();
             if(player == null) return;
-            QueryWherePair where = new QueryWherePair(null, "uuid", player.getUniqueId());
+            QueryWherePair where = new QueryWherePair(null, "unique_id", player.getUniqueId());
+
+            database.updateData("players_data",
+                    "last_session", date, where);
 
             if(!playerData.getSavedDisplayName().equalsIgnoreCase(playerData.getDisplayName())){
                 database.updateData("players_data",
@@ -82,17 +106,19 @@ public class BeeLibDataHandler extends DataHandler{
                         "z_quit", loc.getBlockZ(), where);
                 playerData.setLocation(loc);
             }
-            if(!playerData.getSavedRespawnLocation().equals(player.getRespawnLocation())){
-                Location loc = player.getRespawnLocation();
-                database.updateData("players_data",
-                        "world_respawn", loc.getWorld().getName(), where);
-                database.updateData("players_data",
-                        "x_respawn", loc.getBlockX(), where);
-                database.updateData("players_data",
-                        "y_respawn", loc.getBlockY(), where);
-                database.updateData("players_data",
-                        "z_respawn", loc.getBlockZ(), where);
-                playerData.setRespawnLocation(loc);
+            if(playerData.getSavedRespawnLocation() != null && player.getRespawnLocation() != null){
+                if(!playerData.getSavedRespawnLocation().equals(player.getRespawnLocation())){
+                    Location loc = player.getRespawnLocation();
+                    database.updateData("players_data",
+                            "world_respawn", loc.getWorld().getName(), where);
+                    database.updateData("players_data",
+                            "x_respawn", loc.getBlockX(), where);
+                    database.updateData("players_data",
+                            "y_respawn", loc.getBlockY(), where);
+                    database.updateData("players_data",
+                            "z_respawn", loc.getBlockZ(), where);
+                    playerData.setRespawnLocation(loc);
+                }
             }
             if(playerData.isSavedOp() != player.isOp()){
                 database.updateData("players_data",
@@ -113,7 +139,7 @@ public class BeeLibDataHandler extends DataHandler{
         ArrayList<ArrayList<Object>> dataset = database.getDataObjects("*",
                 new String[]{"unique_id", "player_name", "display_name", "hp", "world_quit",
                         "x_quit", "y_quit", "z_quit", "world_respawn", "x_respawn", "y_respawn",
-                        "z_respawn", "op", "player_time", "permission"},
+                        "z_respawn", "op", "player_time", "first_session", "last_session", "permission"},
                 "players_data");
 
         List<PlayerData> data = new ArrayList<>();
@@ -135,8 +161,12 @@ public class BeeLibDataHandler extends DataHandler{
                 int z_r = ((int) object.get(11));
                 Location location_r = new Location(world_r, x_r, y_r, z_r);
                 boolean op = ((int) object.get(12) != 0);
-                long playerTime = (long) object.get(13);
-                String permissionsSerialized = (String) object.get(14);
+                Object value = object.get(13);
+                long playerTime = ((Number) value).longValue();
+                LocalDateTime firstSession = LocalDateTime.parse((String) object.get(14), DATE_FORMATTER);
+                LocalDateTime lastSession = LocalDateTime.parse((String) object.get(15), DATE_FORMATTER);
+
+                String permissionsSerialized = (String) object.get(16);
                 List<String> permissionsDeserialized = (new Serializer<ArrayList<String>>()).deserialize(permissionsSerialized);
 
                 PlayerData playerData = new PlayerData(
@@ -148,7 +178,9 @@ public class BeeLibDataHandler extends DataHandler{
                         location_r,
                         op,
                         playerTime,
-                        permissionsDeserialized
+                        permissionsDeserialized,
+                        firstSession,
+                        lastSession
                 );
 
                 data.add(playerData);
