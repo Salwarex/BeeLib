@@ -10,20 +10,16 @@ import ru.waxera.beeLib.utils.data.database.query.QueryWherePair;
 import ru.waxera.beeLib.utils.data.serialization.Serializer;
 import ru.waxera.beeLib.utils.player.PlayerData;
 import ru.waxera.beeLib.utils.player.PlayerPool;
+import ru.waxera.beeLib.utils.player.PlayerSaveFlag;
 import ru.waxera.beeLib.utils.preferences.beeLibPrefs.BeeLibPreferencesKeys;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class BeeLibDataHandler extends DataHandler{
+public final class BeeLibDataHandler extends DataHandler{
 
     private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
@@ -53,13 +49,13 @@ public class BeeLibDataHandler extends DataHandler{
         }
     }
 
-    public void savePlayerData(PlayerData playerData, boolean first){
+    public void savePlayerData(PlayerData playerData, List<PlayerSaveFlag> flags){
         if(!(Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) return;
         Serializer<List<String>> permSrz = new Serializer<>();
         LocalDateTime now = LocalDateTime.now();
         String date = DATE_FORMATTER.format(now);
 
-        if(first){
+        if(flags.contains(PlayerSaveFlag.FIRST)){
             Location last = playerData.getLocation();
             Location respawn = playerData.getRespawnLocation();
 
@@ -78,11 +74,21 @@ public class BeeLibDataHandler extends DataHandler{
             System.out.println("saving player data...");
 
             Player player = playerData.getPlayer();
-            if(player == null) return;
-            QueryWherePair where = new QueryWherePair(null, "unique_id", player.getUniqueId());
+            QueryWherePair where = new QueryWherePair(null, "unique_id", playerData.getUniqueId());
 
-            database.updateData("players_data",
+            if(player == null) {
+                if(flags.contains(PlayerSaveFlag.FORCE_PERMISSION_CHANGE)){
+                    database.updateData("players_data",
+                            "permission", permSrz.serialize(playerData.getSavedPermissions()), where);
+                }
+                return;
+            }
+
+            if(playerData.isSessionStateChanged()){
+                database.updateData("players_data",
                     "last_session", date, where);
+                playerData.setSessionStateChanged(false);
+            }
 
             if(!playerData.getSavedDisplayName().equalsIgnoreCase(playerData.getDisplayName())){
                 database.updateData("players_data",
@@ -125,7 +131,7 @@ public class BeeLibDataHandler extends DataHandler{
                         "op", (player.isOp() ? 1 : 0), where);
                 playerData.setOp(player.isOp());
             }
-            if(playerData.equalsPermissions(player.getEffectivePermissions())){
+            if(!playerData.equalsPermissions(player.getEffectivePermissions())){
                 database.updateData("players_data",
                         "permission", permSrz.serialize(playerData.getSavedPermissions()), where);
                 playerData.setPermissions(player.getEffectivePermissions());

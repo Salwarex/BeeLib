@@ -1,4 +1,4 @@
-package ru.waxera.beeLib.exceptions.storages;
+package ru.waxera.beeLib.exceptions.data.pools;
 
 public class KeyAlreadyUsedException extends RuntimeException{
     public KeyAlreadyUsedException() {

@@ -3,6 +3,7 @@ package ru.waxera.beeLib;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.waxera.beeLib.utils.command.BeeLibCommand;
 import ru.waxera.beeLib.utils.specials.language.Language;
 import ru.waxera.beeLib.utils.specials.language.LanguageManager;
 import ru.waxera.beeLib.utils.data.pools.file.FileStorage;
@@ -39,16 +40,17 @@ public final class BeeLib extends JavaPlugin{
         checkDependecies();
         new RestoreHub();
 
-        this.registerEvents();
+        this.registerInteraction();
     }
 
-    private void registerEvents(){
+    private void registerInteraction(){
         Bukkit.getPluginManager().registerEvents(new ContainerInterfaceHandler(), this);
         Bukkit.getPluginManager().registerEvents(new QuestionnaireListener(), this);
         Bukkit.getPluginManager().registerEvents(new HotbarListener(), this);
         if((Boolean) preferences.get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)){
             Bukkit.getPluginManager().registerEvents(new PlayerDataListener(), this);
         }
+        new BeeLibCommand();
     }
 
     public static void setPlugin(final JavaPlugin plugin, Language[] languages){

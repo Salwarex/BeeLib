@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import ru.waxera.beeLib.BeeLib;
-import ru.waxera.beeLib.utils.message.Message;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ public class PlayerData {
     private LocalDateTime firstSession;
     private LocalDateTime lastSession;
 
+    private boolean sessionStateChanged = false;
 
     private List<String> permissions;
 
@@ -138,10 +138,21 @@ public class PlayerData {
         return this.playerTime;
     }
 
+    public boolean isSessionStateChanged(){ return this.sessionStateChanged; }
+
     public boolean hasPermission(String permission) {
         this.checkPlayer();
         if(this.player != null) return this.player.hasPermission(permission);
         return this.permissions.contains(permission);
+    }
+
+    public void addPermission(String perm){
+        if(!permissions.contains(perm)) permissions.add(perm);
+        save(List.of(PlayerSaveFlag.FORCE_PERMISSION_CHANGE));
+    }
+    public void removePermission(String perm){
+        permissions.remove(perm);
+        save(List.of(PlayerSaveFlag.FORCE_PERMISSION_CHANGE));
     }
 
     public List<String> getSavedPermissions() {
@@ -192,15 +203,17 @@ public class PlayerData {
         this.permissions = permissionsSet(info);
     }
 
-    public void save(){
-        BeeLib.getDataHandler().savePlayerData(this, false);
+    public void setSessionStateChanged(boolean b){ this.sessionStateChanged = b; }
+
+    public void save(List<PlayerSaveFlag> flags){
+        BeeLib.getDataHandler().savePlayerData(this, flags);
     }
 
     public boolean equalsPermissions(Set<PermissionAttachmentInfo> external){
         List<String> externalPerms = permissionsSet(external);
         List<String> internalPerms = new ArrayList<>(this.permissions);
         for(String perm : externalPerms){
-            if(!internalPerms.contains(perm)) return false;
+            if(!internalPerms.contains(perm)) { return false; }
             internalPerms.remove(perm);
         }
         return internalPerms.isEmpty();

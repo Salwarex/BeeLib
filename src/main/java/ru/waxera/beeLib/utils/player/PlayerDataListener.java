@@ -6,8 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ru.waxera.beeLib.BeeLib;
-import ru.waxera.beeLib.utils.message.Message;
 
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerDataListener implements Listener {
@@ -22,7 +22,7 @@ public class PlayerDataListener implements Listener {
     public void onQuit(PlayerQuitEvent e){
         PlayerData data = this.checking(e.getPlayer());
         assert data != null;
-        data.save();
+        data.save(List.of());
     }
 
     private PlayerData checking(Player player){
@@ -33,10 +33,11 @@ public class PlayerDataListener implements Listener {
         if(data == null){
             data = new PlayerData(player);
             this.storage.add(uuid, data);
-            BeeLib.getDataHandler().savePlayerData(data, true);
+            BeeLib.getDataHandler().savePlayerData(data, List.of(PlayerSaveFlag.FIRST));
         }
         else{
             data.updateLastSession();
+            data.setSessionStateChanged(true);
         }
         return data;
     }

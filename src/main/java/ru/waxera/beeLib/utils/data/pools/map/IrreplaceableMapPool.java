@@ -1,6 +1,6 @@
 package ru.waxera.beeLib.utils.data.pools.map;
 
-import ru.waxera.beeLib.exceptions.storages.KeyAlreadyUsedException;
+import ru.waxera.beeLib.exceptions.data.pools.KeyAlreadyUsedException;
 import ru.waxera.beeLib.utils.data.pools.Pool;
 
 /**
