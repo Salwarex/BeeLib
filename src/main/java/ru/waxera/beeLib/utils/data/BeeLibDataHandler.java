@@ -31,7 +31,7 @@ public final class BeeLibDataHandler extends DataHandler{
                     "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                             "unique_id VARCHAR(36) NOT NULL UNIQUE, " +
                             "player_name VARCHAR(32) NOT NULL UNIQUE," +
-                            "display_name VARCHAR(32) UNIQUE, " +
+                            "display_name VARCHAR(32), " +
                             "hp REAL, " +
                             "world_quit VARCHAR(32), " +
                             "x_quit INTEGER, " +
@@ -66,7 +66,7 @@ public final class BeeLibDataHandler extends DataHandler{
             database.insert("players_data", "unique_id, player_name, display_name, hp, world_quit, " +
                             "x_quit, y_quit, z_quit, world_respawn, x_respawn, y_respawn, z_respawn, op, first_session, last_session, permission",
                     playerData.getUniqueId(), playerData.getName(), playerData.getDisplayName(), playerData.getHealthScale(),
-                    last.getWorld().toString(), last.getBlockX(), last.getBlockY(), last.getBlockZ(), respawn.getWorld().getName(),
+                    last.getWorld().getName(), last.getBlockX(), last.getBlockY(), last.getBlockZ(), respawn.getWorld().getName(),
                     respawn.getBlockX(), respawn.getBlockY(), respawn.getBlockZ(), playerData.isOp() ? 1 : 0, date, date,
                     permSrz.serialize(playerData.getSavedPermissions()));
         }
