@@ -3,6 +3,7 @@ package ru.waxera.beeLib.utils.data.pools.map;
 import ru.waxera.beeLib.utils.data.pools.Pool;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import java.util.Map;
  */
 
 public abstract class MapPool<K, T> implements Pool<K, T> {
-    protected final Map<K, T> storage = new HashMap<>();
+    protected Map<K, T> storage = new HashMap<>();
 
     /**
      * Adding objects to the pool during initialization.
