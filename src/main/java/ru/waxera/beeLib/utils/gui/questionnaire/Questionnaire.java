@@ -26,6 +26,7 @@ public class Questionnaire {
     private final Plugin plugin;
     private int actualQuestion = 0;
     private Sound questionSound = null;
+    private boolean needAnnounce = false;
     private String stopWord;
 
     public Questionnaire(Plugin plugin,
@@ -33,11 +34,13 @@ public class Questionnaire {
                          Action action,
                          Sound questionSound,
                          String stopWord,
+                         boolean needAnnounce,
                          Question ... questions){
         this.plugin = plugin;
         this.player = player;
         this.action = action;
         this.questionSound = questionSound;
+        this.needAnnounce = needAnnounce;
         this.stopWord = stopWord;
         for(Question question : questions){
             this.questions.put(question.getVariable(), question);
@@ -59,7 +62,7 @@ public class Questionnaire {
 
     private void sendQuestion(){
         if(!QuestionnairePool.getInstance().contains(player)){
-            Message.send(this.plugin, player, "@qsnr-announce@");
+            if(needAnnounce) Message.send(this.plugin, player, "@qsnr-announce@");
             QuestionnairePool.getInstance().add(player, this);
         }
         if(isOver()){
@@ -83,7 +86,7 @@ public class Questionnaire {
                 endQuestionnaire(true); return;
             }
         }
-        Message.send(this.plugin, player, "@qsnr-your-answer@: " + answer);
+        Message.send(this.plugin, player, "@qsnr-your-answer@ " + answer);
         Question question = getActualQuestion();
         if(question == null){
             endQuestionnaire(false);
