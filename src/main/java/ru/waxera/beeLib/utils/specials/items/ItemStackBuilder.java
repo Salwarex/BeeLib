@@ -16,6 +16,7 @@ import ru.waxera.beeLib.utils.message.Message;
 import ru.waxera.beeLib.utils.specials.string.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ItemStackBuilder {
     private ItemStack itemStack;
@@ -53,6 +54,14 @@ public class ItemStackBuilder {
         }
         meta.setLore(loreFin);
         itemStack.setItemMeta(meta);
+    }
+
+    public void setLore(Plugin plugin, String lore) {
+        setLore(plugin, lore.stripIndent()
+                .lines()
+                .map(String::strip)
+                .filter(s -> !s.isEmpty())
+                .toArray(String[]::new));
     }
 
     public void setEnchantments(int[] levels, Enchantment... enchantments) {
