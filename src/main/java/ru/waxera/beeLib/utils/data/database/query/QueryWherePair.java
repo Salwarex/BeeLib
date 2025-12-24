@@ -1,5 +1,6 @@
 package ru.waxera.beeLib.utils.data.database.query;
 
+@Deprecated
 public class QueryWherePair {
     private final LogicalOperator prevOperator;
     private final String column;
