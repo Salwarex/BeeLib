@@ -5,7 +5,6 @@ import ru.shapedb.database.conditions.SqlInsertAttributeCondition;
 import ru.shapedb.database.dialect.SqlDialect;
 import ru.shapedb.database.statement.Statement;
 import ru.shapedb.database.statement.base.*;
-import ru.waxera.beeLib.utils.data.database.query.QueryWherePair;
 
 import java.sql.*;
 import java.util.List;
@@ -14,16 +13,14 @@ import java.util.List;
  * A class for interacting with SQL databases through built-in methods.
  *
  * <p>
- * This class describes only methods for directly simplifying interaction
- * with the database, bypassing writing SQL queries. Some of the methods
- * in this class may seem unoptimized or thoughtless, but the main purpose
- * of their creation is to simplify interaction. There may be changes in the
- * future to achieve greater optimization. Since version 2 uses {@link QueryWherePair}.
+ * This class allows you to use the ShapeDB module, which opens up the possibility of
+ * lightweight use of Java code bypassing writing SQL queries. Starting with v1.4,
+ * it replaced the old Database class.
  * </p>
  *
  * @version 1
  * @since v1.4
- * @author Salwarex
+ * @author Vitaliy
  */
 
 public class SqlRepository implements DatabaseRepository {

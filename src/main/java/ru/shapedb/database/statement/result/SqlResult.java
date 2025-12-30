@@ -1,7 +1,20 @@
 package ru.shapedb.database.statement.result;
 
+
 import java.sql.SQLException;
 import java.util.Objects;
+
+/**
+ * Container class containing the value of the query result from the database.
+ *
+ * <p>
+ * Allows you to safely get the value returned from the database.
+ * </p>
+ *
+ * @version 1
+ * @since v1.4
+ * @author Vitaliy
+ */
 
 public class SqlResult<T> {
     private final Class<T> type;
