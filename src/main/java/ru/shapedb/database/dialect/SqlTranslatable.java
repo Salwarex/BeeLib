@@ -1,0 +1,5 @@
+package ru.shapedb.database.dialect;
+
+public interface SqlTranslatable {
+
+}
