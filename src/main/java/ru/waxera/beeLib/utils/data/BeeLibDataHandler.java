@@ -1,0 +1,198 @@
+package ru.waxera.beeLib.utils.data;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import ru.waxera.beeLib.BeeLib;
+import ru.waxera.beeLib.utils.data.database.DatabaseType;
+import ru.waxera.beeLib.utils.data.database.query.QueryWherePair;
+import ru.waxera.beeLib.utils.data.serialization.Serializer;
+import ru.waxera.beeLib.utils.player.PlayerData;
+import ru.waxera.beeLib.utils.player.PlayerPool;
+import ru.waxera.beeLib.utils.player.PlayerSaveFlag;
+import ru.waxera.beeLib.utils.preferences.beeLibPrefs.BeeLibPreferencesKeys;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public final class BeeLibDataHandler extends DataHandler{
+
+    private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+
+    public BeeLibDataHandler(){
+        super(DatabaseType.SQLITE, BeeLib.getInstance().getDataFolder().getAbsolutePath() +
+                "/database.db", null, null);
+        if((Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) {
+            database.createTable("players_data",
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                            "unique_id VARCHAR(36) NOT NULL UNIQUE, " +
+                            "player_name VARCHAR(32) NOT NULL UNIQUE," +
+                            "display_name VARCHAR(32), " +
+                            "hp REAL, " +
+                            "world_quit VARCHAR(32), " +
+                            "x_quit INTEGER, " +
+                            "y_quit INTEGER, " +
+                            "z_quit INTEGER, " +
+                            "world_respawn VARCHAR(32), " +
+                            "x_respawn INTEGER, " +
+                            "y_respawn INTEGER, " +
+                            "z_respawn INTEGER, " +
+                            "op INTEGER DEFAULT 0, " +
+                            "player_time INTEGER DEFAULT 0, " +
+                            "first_session TEXT NOT NULL, " +
+                            "last_session TEXT NOT NULL, " +
+                            "permission TEXT");
+        }
+    }
+
+    public void savePlayerData(PlayerData playerData, List<PlayerSaveFlag> flags){
+        if(!(Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) return;
+        Serializer<List<String>> permSrz = new Serializer<>();
+        LocalDateTime now = LocalDateTime.now();
+        String date = DATE_FORMATTER.format(now);
+
+        if(flags.contains(PlayerSaveFlag.FIRST)){
+            Location last = playerData.getLocation();
+            Location respawn = playerData.getRespawnLocation();
+
+            if (respawn == null) respawn = last.getWorld().getSpawnLocation();
+
+            System.out.println("registering new player data...");
+
+            database.insert("players_data", "unique_id, player_name, display_name, hp, world_quit, " +
+                            "x_quit, y_quit, z_quit, world_respawn, x_respawn, y_respawn, z_respawn, op, first_session, last_session, permission",
+                    playerData.getUniqueId(), playerData.getName(), playerData.getDisplayName(), playerData.getHealthScale(),
+                    last.getWorld().getName(), last.getBlockX(), last.getBlockY(), last.getBlockZ(), respawn.getWorld().getName(),
+                    respawn.getBlockX(), respawn.getBlockY(), respawn.getBlockZ(), playerData.isOp() ? 1 : 0, date, date,
+                    permSrz.serialize(playerData.getSavedPermissions()));
+        }
+        else{
+            System.out.println("saving player data...");
+
+            Player player = playerData.getPlayer();
+            QueryWherePair where = new QueryWherePair(null, "unique_id", playerData.getUniqueId());
+
+            if(player == null) {
+                if(flags.contains(PlayerSaveFlag.FORCE_PERMISSION_CHANGE)){
+                    database.updateData("players_data",
+                            "permission", permSrz.serialize(playerData.getSavedPermissions()), where);
+                }
+                return;
+            }
+
+            if(playerData.isSessionStateChanged()){
+                database.updateData("players_data",
+                    "last_session", date, where);
+                playerData.setSessionStateChanged(false);
+            }
+
+            if(!playerData.getSavedDisplayName().equalsIgnoreCase(playerData.getDisplayName())){
+                database.updateData("players_data",
+                        "display_name", player.getDisplayName(), where);
+                playerData.setDisplayName(player.getDisplayName());
+            }
+            if(playerData.getSavedHealthScale() != player.getHealthScale()){
+                database.updateData("players_data",
+                        "hp", player.getHealthScale(), where);
+                playerData.setHp(player.getHealthScale());
+            }
+            if(!playerData.getSavedLocation().equals(player.getLocation())){
+                Location loc = player.getLocation();
+                database.updateData("players_data",
+                        "world_quit", loc.getWorld().getName(), where);
+                database.updateData("players_data",
+                        "x_quit", loc.getBlockX(), where);
+                database.updateData("players_data",
+                        "y_quit", loc.getBlockY(), where);
+                database.updateData("players_data",
+                        "z_quit", loc.getBlockZ(), where);
+                playerData.setLocation(loc);
+            }
+            if(playerData.getSavedRespawnLocation() != null && player.getRespawnLocation() != null){
+                if(!playerData.getSavedRespawnLocation().equals(player.getRespawnLocation())){
+                    Location loc = player.getRespawnLocation();
+                    database.updateData("players_data",
+                            "world_respawn", loc.getWorld().getName(), where);
+                    database.updateData("players_data",
+                            "x_respawn", loc.getBlockX(), where);
+                    database.updateData("players_data",
+                            "y_respawn", loc.getBlockY(), where);
+                    database.updateData("players_data",
+                            "z_respawn", loc.getBlockZ(), where);
+                    playerData.setRespawnLocation(loc);
+                }
+            }
+            if(playerData.isSavedOp() != player.isOp()){
+                database.updateData("players_data",
+                        "op", (player.isOp() ? 1 : 0), where);
+                playerData.setOp(player.isOp());
+            }
+            if(!playerData.equalsPermissions(player.getEffectivePermissions())){
+                database.updateData("players_data",
+                        "permission", permSrz.serialize(playerData.getSavedPermissions()), where);
+                playerData.setPermissions(player.getEffectivePermissions());
+            }
+        }
+
+    }
+
+    public void initPlayerPool(){
+        if(!(Boolean) BeeLib.getPreferences().get(BeeLibPreferencesKeys.ALLOW_PLAYER_DATA_KEEPING)) return;
+        ArrayList<ArrayList<Object>> dataset = database.getDataObjects("*",
+                new String[]{"unique_id", "player_name", "display_name", "hp", "world_quit",
+                        "x_quit", "y_quit", "z_quit", "world_respawn", "x_respawn", "y_respawn",
+                        "z_respawn", "op", "player_time", "first_session", "last_session", "permission"},
+                "players_data");
+
+        List<PlayerData> data = new ArrayList<>();
+
+        if(dataset != null){
+            for (ArrayList<Object> object : dataset){
+                UUID uuid = UUID.fromString(((String) object.get(0)));
+                String playerName = ((String) object.get(1));
+                String displayName = ((String) object.get(2));
+                double health = (double) object.get(3);
+                World world = Bukkit.getWorld(((String) object.get(4)));
+                int x = ((int) object.get(5));
+                int y = ((int) object.get(6));
+                int z = ((int) object.get(7));
+                Location location = new Location(world, x, y, z);
+                World world_r = Bukkit.getWorld(((String) object.get(8)));
+                int x_r = ((int) object.get(9));
+                int y_r = ((int) object.get(10));
+                int z_r = ((int) object.get(11));
+                Location location_r = new Location(world_r, x_r, y_r, z_r);
+                boolean op = ((int) object.get(12) != 0);
+                Object value = object.get(13);
+                long playerTime = ((Number) value).longValue();
+                LocalDateTime firstSession = LocalDateTime.parse((String) object.get(14), DATE_FORMATTER);
+                LocalDateTime lastSession = LocalDateTime.parse((String) object.get(15), DATE_FORMATTER);
+
+                String permissionsSerialized = (String) object.get(16);
+                List<String> permissionsDeserialized = (new Serializer<ArrayList<String>>()).deserialize(permissionsSerialized);
+
+                PlayerData playerData = new PlayerData(
+                        uuid,
+                        playerName,
+                        displayName,
+                        health,
+                        location,
+                        location_r,
+                        op,
+                        playerTime,
+                        permissionsDeserialized,
+                        firstSession,
+                        lastSession
+                );
+
+                data.add(playerData);
+            }
+        }
+
+        PlayerPool.getInstance().setDefaults(data);
+    }
+}

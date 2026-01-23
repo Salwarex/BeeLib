@@ -2,11 +2,20 @@ package ru.waxera.beeLib.utils.gui.hotbar;
 
 import org.bukkit.configuration.ConfigurationSection;
 import ru.waxera.beeLib.BeeLib;
-import ru.waxera.beeLib.utils.data.storages.file.FileStorage;
+import ru.waxera.beeLib.utils.data.pools.file.FileStorage;
 import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.HashMap;
 import java.util.Set;
+
+/**
+ * A storage of information about items that HotbarInterface
+ * has hidden for the duration of its action.
+ *
+ * @version 1
+ * @since v1.2.4
+ * @author Salwarex
+ */
 
 public class RestoreHub {
     private static FileStorage holding = BeeLib.getHolding();

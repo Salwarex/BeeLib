@@ -10,6 +10,14 @@ import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.HashMap;
 
+/**
+ * The standard single-page implementation of {@link ContainerInterface}
+ *
+ * @version 1
+ * @since v1.0
+ * @author Salwarex
+ */
+
 public class SinglePageInterface extends ContainerInterface {
     private HashMap<Integer, Slot> items = new HashMap<>();
 

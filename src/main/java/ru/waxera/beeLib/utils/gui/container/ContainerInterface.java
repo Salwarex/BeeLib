@@ -6,11 +6,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ru.waxera.beeLib.utils.ItemStackBuilder;
-import ru.waxera.beeLib.utils.StringUtils;
+import ru.waxera.beeLib.utils.specials.items.ItemStackBuilder;
+import ru.waxera.beeLib.utils.specials.string.StringUtils;
 import ru.waxera.beeLib.utils.message.Message;
 
 import java.util.ArrayList;
+
+/**
+ * Implementation of a graphical user interface (GUI) for interaction
+ * between server players and a BeeLib-dependent plugin using Container interface.
+ *
+ * @version 1
+ * @since v1.0
+ * @author Salwarex
+ */
 
 public abstract class ContainerInterface implements Cloneable{
     protected Inventory inventory;
@@ -53,7 +62,7 @@ public abstract class ContainerInterface implements Cloneable{
     }
     public void open(Player player){
         player.openInventory(inventory);
-        InterfaceOpenedList.put(player, this);
+        InterfaceOpenedPool.getInstance().add(player, this);
     }
 
     @Override

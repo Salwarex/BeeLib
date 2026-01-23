@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import ru.waxera.beeLib.BeeLib;
-import ru.waxera.beeLib.utils.message.Message;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +22,10 @@ public class PlayerData {
     private Location respawnLocation;
     private boolean op;
     private long playerTime;
+    private LocalDateTime firstSession;
+    private LocalDateTime lastSession;
+
+    private boolean sessionStateChanged = false;
 
     private List<String> permissions;
 
@@ -33,7 +37,9 @@ public class PlayerData {
                       Location respawnLocation,
                       boolean op,
                       long playerTime,
-                      List<String> permissions){
+                      List<String> permissions,
+                      LocalDateTime firstSession,
+                      LocalDateTime lastSession){
         this.uuid = uuid;
         this.name = playerName;
         this.displayName = displayName;
@@ -43,6 +49,8 @@ public class PlayerData {
         this.op = op;
         this.playerTime = playerTime;
         this.permissions = permissions;
+        this.firstSession = firstSession;
+        this.lastSession = lastSession;
     }
     public PlayerData(Player player){
         if(player == null) {
@@ -60,6 +68,8 @@ public class PlayerData {
         this.op = player.isOp();
         this.playerTime = player.getPlayerTime();
         this.permissions = permissionsSet(player.getEffectivePermissions());
+        this.firstSession = LocalDateTime.now();
+        this.lastSession = LocalDateTime.now();
     }
 
     public UUID getUniqueId() {
@@ -128,16 +138,42 @@ public class PlayerData {
         return this.playerTime;
     }
 
+    public boolean isSessionStateChanged(){ return this.sessionStateChanged; }
+
     public boolean hasPermission(String permission) {
         this.checkPlayer();
         if(this.player != null) return this.player.hasPermission(permission);
         return this.permissions.contains(permission);
     }
 
+    public void addPermission(String perm){
+        if(!permissions.contains(perm)) permissions.add(perm);
+        save(List.of(PlayerSaveFlag.FORCE_PERMISSION_CHANGE));
+    }
+    public void removePermission(String perm){
+        permissions.remove(perm);
+        save(List.of(PlayerSaveFlag.FORCE_PERMISSION_CHANGE));
+    }
+
     public List<String> getSavedPermissions() {
         return permissions;
     }
 
+    public LocalDateTime getFirstSession() {
+        return firstSession;
+    }
+
+    public LocalDateTime getLastSession() {
+        return lastSession;
+    }
+
+    public void updateLastSession(){
+        this.lastSession = LocalDateTime.now();
+    }
+
+    public void setPlayer(Player player){
+        this.player = player;
+    }
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
@@ -167,19 +203,17 @@ public class PlayerData {
         this.permissions = permissionsSet(info);
     }
 
-    public void save(){
-        if(player == null){
-            Message.error(null, "The plugin cannot update the player's data because it has not been found!");
-            return;
-        }
-        BeeLib.getDataHandler().savePlayerData(this, false);
+    public void setSessionStateChanged(boolean b){ this.sessionStateChanged = b; }
+
+    public void save(List<PlayerSaveFlag> flags){
+        BeeLib.getDataHandler().savePlayerData(this, flags);
     }
 
     public boolean equalsPermissions(Set<PermissionAttachmentInfo> external){
         List<String> externalPerms = permissionsSet(external);
         List<String> internalPerms = new ArrayList<>(this.permissions);
         for(String perm : externalPerms){
-            if(!internalPerms.contains(perm)) return false;
+            if(!internalPerms.contains(perm)) { return false; }
             internalPerms.remove(perm);
         }
         return internalPerms.isEmpty();

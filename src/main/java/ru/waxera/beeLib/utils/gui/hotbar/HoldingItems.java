@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import ru.waxera.beeLib.BeeLib;
-import ru.waxera.beeLib.utils.data.storages.file.FileStorage;
+import ru.waxera.beeLib.utils.data.pools.file.FileStorage;
 import ru.waxera.beeLib.utils.message.Message;
 
 public class HoldingItems {
