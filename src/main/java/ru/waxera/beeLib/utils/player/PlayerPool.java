@@ -26,6 +26,13 @@ public class PlayerPool extends IrreplaceableMapPool<UUID, PlayerData> {
         return result;
     }
 
+    public PlayerData get(String name){
+        for(PlayerData pd : this.storage.values()){
+            if(pd.getName().equals(name)) return pd;
+        }
+        return null;
+    }
+
     public static synchronized PlayerPool getInstance() {
         return instance == null ? instance = new PlayerPool() : instance;
     }
